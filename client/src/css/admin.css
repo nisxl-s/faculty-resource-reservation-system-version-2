@@ -1,0 +1,276 @@
+/* Global Styles and CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  background-image: url("./images/bg image.jpeg");
+  color: #333;
+  line-height: 1.6;
+}
+
+.admin-dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main Content Styles */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.page-header h2 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.page-header p {
+  font-size: 1.1rem;
+  color: #d0dae8;
+}
+
+/* Statistics Grid Styles */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+  border-left: 4px solid;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.stat-card-blue {
+  border-left-color: #4299e1;
+}
+
+.stat-card-green {
+  border-left-color: #48bb78;
+}
+
+.stat-card-purple {
+  border-left-color: #9f7aea;
+}
+
+.stat-card-orange {
+  border-left-color: #ed8936;
+}
+
+.stat-icon {
+  padding: 1rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stat-card-blue .stat-icon {
+  background: rgba(66, 153, 225, 0.1);
+  color: #4299e1;
+}
+
+.stat-card-green .stat-icon {
+  background: rgba(72, 187, 120, 0.1);
+  color: #48bb78;
+}
+
+.stat-card-purple .stat-icon {
+  background: rgba(159, 122, 234, 0.1);
+  color: #9f7aea;
+}
+
+.stat-card-orange .stat-icon {
+  background: rgba(237, 137, 54, 0.1);
+  color: #ed8936;
+}
+
+.stat-info h3 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 0.25rem;
+}
+
+.stat-info p {
+  color: #718096;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Dashboard Section Styles */
+.dashboard-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.section-header h3 {
+  font-size: 1.5rem;
+  color: #2d3748;
+  font-weight: 600;
+}
+
+.notification-btn {
+  background: #4299e1;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.notification-btn:hover {
+  background: #3182ce;
+  transform: translateY(-2px);
+}
+
+.notify {
+  color: white;
+  text-decoration: none;
+}
+
+/* Activity List Styles */
+.activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-item {
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid #e2e8f0;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+}
+
+.activity-item:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.activity-approved {
+  border-left-color: #48bb78;
+  background: rgba(72, 187, 120, 0.05);
+}
+
+.activity-pending {
+  border-left-color: #ed8936;
+  background: rgba(237, 137, 54, 0.05);
+}
+
+.activity-rejected {
+  border-left-color: #f56565;
+  background: rgba(245, 101, 101, 0.05);
+}
+
+.activity-time {
+  font-size: 0.875rem;
+  color: #718096;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.activity-text {
+  color: #2d3748;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Content Placeholder Styles */
+.content-placeholder {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #718096;
+}
+
+.content-placeholder svg {
+  margin-bottom: 1.5rem;
+  color: #cbd5e0;
+}
+
+.content-placeholder h3 {
+  font-size: 1.5rem;
+  color: #4a5568;
+  margin-bottom: 1rem;
+}
+
+/* Responsive Design - Mobile Styles */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+  
+  .page-header h2 {
+    font-size: 2rem;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .stat-card {
+    padding: 1.5rem;
+  }
+  
+  .stat-info h3 {
+    font-size: 2rem;
+  }
+  
+  
+}
+
+@media (max-width: 480px) {
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .activity-item {
+    padding: 1rem;
+  }
+}
