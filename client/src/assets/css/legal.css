@@ -1,0 +1,49 @@
+/* src/assets/css/legal.css */
+
+/* full-page background */
+.legal-page-bg {
+  background: url('../images/bg image.jpeg') no-repeat center center/cover;
+  min-height: 100vh;
+  width: 100%;
+  /* push content down if header is fixed */
+  padding-top: 120px; 
+  display: flex;
+  flex-direction: column;
+}
+
+/* optional semi-transparent overlay for text readability */
+.legal-overlay {
+  background-color: rgba(0, 0, 0, 0.35); /* tweak alpha */
+  min-height: calc(100vh - 120px);
+  color: #fff;
+  padding: 40px 20px 80px;
+}
+
+/* make hero banner transparent so image shows behind it */
+.legal-overlay .hero-banner {
+  background: transparent;
+  margin-top: 0; /* hero-banner margin handled by wrapper padding */
+  color: #fff;
+}
+
+/* ensure help-box stands out on dark overlay */
+.legal-overlay .help-box {
+  background: rgba(255, 255, 255, 0.95);
+  color: #222;
+  border-left-color: #1976d2; /* adjust accent color as you like */
+}
+.legal-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  display: block;
+}
+.legal-page-bg .legal-overlay .hero-banner{
+  background: linear-gradient(to right, #004080, #007acc);
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
