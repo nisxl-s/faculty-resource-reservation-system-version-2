@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { User, Mail, Phone, Building, GraduationCap, Edit3, Save, X, Camera } from 'lucide-react';
-import "../css/user.css";
+import "../assets/css/user.css";
+import "../assets/css/global.css";
 
 // Main User Profile Component
 const UserProfile = () => {

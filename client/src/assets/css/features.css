@@ -1,16 +1,18 @@
 /* Features Section */
 .features {
-    padding: 4rem 2rem;
+    padding: 6rem 2rem 4rem;
+    margin: 4rem 0;
     text-align: center;
     color: white;
     overflow: hidden;
+    background: rgba(0, 0, 0, 0.2);
 }
 
 .features h2 {
-    font-size: 2rem;
-    line-height: 10vh;
+    font-size: 2.5rem;
     margin-bottom: 3rem;
     color: var(--primary-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .carousel-wrapper {

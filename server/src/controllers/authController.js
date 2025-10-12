@@ -1,321 +1,291 @@
-const User = require('../models/user');
-const { generateToken } = require('../utils/jwt');
-const { sendWelcomeEmail } = require('../utils/email');
-const Notification = require('../models/notification');
-const logger = require('../utils/logger');
+const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+const { JWT_SECRET } = require('../middleware/auth');
+const { validationResult } = require('express-validator');
 
-/**
- * Register a new user
- * POST /api/auth/register
- */
-const register = async (req, res) => {
-    try {
-        const { email, facultyId, fullName, department } = req.body;
-
-        // Check if user already exists
-        const existingUser = await User.findByEmail(email);
-        if (existingUser) {
-            return res.status(400).json({
-                success: false,
-                message: 'User with this email already exists'
-            });
-        }
-
-        // Check if registration number already exists
-        if (facultyId) {
-            const existingRegNo = await User.findByRegistrationNo(facultyId);
-            if (existingRegNo) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Registration number already exists'
-                });
-            }
-        }
-
-        // Map frontend fields to backend fields
-        const userData = {
-            full_name: fullName, // ← Fixed mapping
-            email: email,
-            password: req.body.password,
-            registration_no: facultyId, // ← Fixed mapping
-            department: department,
-            faculty: req.body.faculty || 'General',
-            role: 'student' // Default role for registration
-        };
-
-        // Create new user
-        const user = await User.create(userData);
-
-        // Create welcome notification
-        await Notification.create({
-            user_id: user.user_id,
-            type: 'registration',
-            title: 'Welcome to University Resource Management',
-            message: 'Your account has been successfully created. You can now browse and book resources.',
-            priority: 'medium'
-        });
-
-        // Send welcome email (optional)
-        sendWelcomeEmail(user).catch(err => 
-            logger.error('Failed to send welcome email:', err)
-        );
-
-        // Generate token
-        const token = generateToken({
-            user_id: user.user_id,
-            email: user.email,
-            role: user.role
-        });
-
-        res.status(201).json({
-            success: true,
-            message: 'User registered successfully',
-            token,
-            user: {
-                user_id: user.user_id,
-                full_name: user.full_name,
-                email: user.email,
-                role: user.role,
-                department: user.department,
-                faculty: user.faculty
-            }
-        });
-    } catch (error) {
-        logger.error('Registration error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error registering user',
-            error: error.message
-        });
+// Register a new user
+exports.register = async (req, res) => {
+  try {
+    // Validate request
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false, 
+        errors: errors.array() 
+      });
     }
+
+    const { full_name, email, password, role, department, phone } = req.body;
+
+    // Check if user already exists
+    const existingUser = await User.findByEmail(email);
+    if (existingUser) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Email already registered' 
+      });
+    }
+
+    // Create new user
+    const userId = await User.create({
+      full_name,
+      email,
+      password,
+      role: role || 'student',
+      department,
+      phone
+    });
+
+    // Get created user
+    const user = await User.findById(userId);
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role 
+      },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: 'User registered successfully',
+      data: {
+        user: {
+          id: user.id,
+          full_name: user.full_name,
+          email: user.email,
+          role: user.role,
+          department: user.department
+        },
+        token
+      }
+    });
+  } catch (error) {
+    console.error('Register error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error registering user',
+      error: error.message
+    });
+  }
 };
 
-/**
- * Login user
- * POST /api/auth/login
- */
-const login = async (req, res) => {
-    try {
-        const { email, password, userType } = req.body;
-
-        // Find user by email
-        const user = await User.findByEmail(email);
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid email or password'
-            });
-        }
-
-        // Check if user is active
-        if (!user.is_active) {
-            return res.status(401).json({
-                success: false,
-                message: 'Your account has been deactivated. Please contact administration.'
-            });
-        }
-
-        // If userType is provided, verify it matches the user's role
-        if (userType && user.role !== userType) {
-            return res.status(401).json({
-                success: false,
-                message: 'User type mismatch. Please check your credentials.'
-            });
-        }
-
-        // Verify password
-        const isPasswordValid = await User.verifyPassword(password, user.password_hash);
-        if (!isPasswordValid) {
-            return res.status(401).json({
-                success: false,
-                message: 'Invalid email or password'
-            });
-        }
-
-        // Generate token
-        const token = generateToken({
-            user_id: user.user_id,
-            email: user.email,
-            role: user.role
-        });
-
-        res.json({
-            success: true,
-            message: 'Login successful',
-            token,
-            user: {
-                user_id: user.user_id,
-                full_name: user.full_name,
-                email: user.email,
-                role: user.role,
-                department: user.department,
-                faculty: user.faculty,
-                registration_no: user.registration_no,
-                academic_year: user.academic_year,
-                phone: user.phone,
-                profile_photo: user.profile_photo_path // ← Fixed field name
-            }
-        });
-    } catch (error) {
-        logger.error('Login error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error logging in',
-            error: error.message
-        });
+// Login user
+exports.login = async (req, res) => {
+  try {
+    // Validate request
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ 
+        success: false, 
+        errors: errors.array() 
+      });
     }
+
+    const { email, password } = req.body;
+
+    // Find user by email
+    const user = await User.findByEmail(email);
+    if (!user) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid email or password' 
+      });
+    }
+
+    // Verify password
+    const isPasswordValid = await User.verifyPassword(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Invalid email or password' 
+      });
+    }
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role 
+      },
+      JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({
+      success: true,
+      message: 'Login successful',
+      data: {
+        user: {
+          id: user.id,
+          full_name: user.full_name,
+          email: user.email,
+          role: user.role,
+          department: user.department
+        },
+        token
+      }
+    });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error logging in',
+      error: error.message
+    });
+  }
 };
 
-/**
- * Logout user
- * POST /api/auth/logout
- */
-const logout = async (req, res) => {
-    try {
-        // In a stateless JWT system, logout is handled client-side
-        // by removing the token from storage
-        res.json({
-            success: true,
-            message: 'Logged out successfully'
-        });
-    } catch (error) {
-        logger.error('Logout error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error logging out',
-            error: error.message
-        });
+// Get current user profile
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'User not found' 
+      });
     }
+
+    res.json({
+      success: true,
+      data: { user }
+    });
+  } catch (error) {
+    console.error('Get profile error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error fetching profile',
+      error: error.message
+    });
+  }
 };
 
-/**
- * Get current user profile
- * GET /api/auth/me
- */
-const getProfile = async (req, res) => {
-    try {
-        const user = await User.findById(req.user.user_id);
-        
-        if (!user) {
-            return res.status(404).json({
-                success: false,
-                message: 'User not found'
-            });
-        }
+// Update user profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const { full_name, email, department, phone } = req.body;
 
-        // Handle profile photo field
-        if (user.profile_photo_path) {
-            user.profile_photo = user.profile_photo_path;
-        } else {
-            user.profile_photo = null;
-        }
-
-        res.json({
-            success: true,
-            user
+    // Check if email is being changed to an existing email
+    if (email !== req.user.email) {
+      const existingUser = await User.findByEmail(email);
+      if (existingUser && existingUser.id !== req.user.id) {
+        return res.status(400).json({ 
+          success: false, 
+          message: 'Email already in use' 
         });
-    } catch (error) {
-        logger.error('Get profile error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error fetching profile',
-            error: error.message
-        });
+      }
     }
+
+    await User.update(req.user.id, {
+      full_name,
+      email,
+      department,
+      phone,
+      role: req.user.role // Keep existing role
+    });
+
+    const updatedUser = await User.findById(req.user.id);
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: { user: updatedUser }
+    });
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error updating profile',
+      error: error.message
+    });
+  }
 };
 
-/**
- * Update current user profile
- * PUT /api/auth/me
- */
-const updateProfile = async (req, res) => {
-    try {
-        const allowedUpdates = ['full_name', 'email', 'phone', 'academic_year', 'profile_photo', 'department', 'faculty'];
-        const updates = {};
+// Change password
+exports.changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
 
-        Object.keys(req.body).forEach(key => {
-            if (allowedUpdates.includes(key)) {
-                updates[key] = req.body[key];
-            }
-        });
-
-        // Check if email is being changed and if it's already taken
-        if (updates.email && updates.email !== req.user.email) {
-            const existingUser = await User.findByEmail(updates.email);
-            if (existingUser) {
-                return res.status(400).json({
-                    success: false,
-                    message: 'Email already in use'
-                });
-            }
-        }
-
-        const updatedUser = await User.update(req.user.user_id, updates);
-
-        res.json({
-            success: true,
-            message: 'Profile updated successfully',
-            user: updatedUser
-        });
-    } catch (error) {
-        logger.error('Update profile error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error updating profile',
-            error: error.message
-        });
+    // Get user with password
+    const user = await User.findByEmail(req.user.email);
+    
+    // Verify current password
+    const isPasswordValid = await User.verifyPassword(currentPassword, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ 
+        success: false, 
+        message: 'Current password is incorrect' 
+      });
     }
+
+    // Change password
+    await User.changePassword(req.user.id, newPassword);
+
+    res.json({
+      success: true,
+      message: 'Password changed successfully'
+    });
+  } catch (error) {
+    console.error('Change password error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error changing password',
+      error: error.message
+    });
+  }
 };
 
-/**
- * Change password
- * PUT /api/auth/change-password
- */
-const changePassword = async (req, res) => {
-    try {
-        const { currentPassword, newPassword } = req.body;
+// Get all users (admin only)
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll();
 
-        if (!currentPassword || !newPassword) {
-            return res.status(400).json({
-                success: false,
-                message: 'Current password and new password are required'
-            });
-        }
-
-        // Get user with password
-        const user = await User.findByEmail(req.user.email);
-
-        // Verify current password
-        const isPasswordValid = await User.verifyPassword(currentPassword, user.password_hash);
-        if (!isPasswordValid) {
-            return res.status(401).json({
-                success: false,
-                message: 'Current password is incorrect'
-            });
-        }
-
-        // Update password
-        await User.updatePassword(req.user.user_id, newPassword);
-
-        res.json({
-            success: true,
-            message: 'Password changed successfully'
-        });
-    } catch (error) {
-        logger.error('Change password error:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Error changing password',
-            error: error.message
-        });
-    }
+    res.json({
+      success: true,
+      data: { users }
+    });
+  } catch (error) {
+    console.error('Get all users error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error fetching users',
+      error: error.message
+    });
+  }
 };
 
-module.exports = {
-    register,
-    login,
-    logout,
-    getProfile,
-    updateProfile,
-    changePassword
+// Delete user (admin only)
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Prevent self-deletion
+    if (parseInt(id) === req.user.id) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Cannot delete your own account' 
+      });
+    }
+
+    await User.delete(id);
+
+    res.json({
+      success: true,
+      message: 'User deleted successfully'
+    });
+  } catch (error) {
+    console.error('Delete user error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error deleting user',
+      error: error.message
+    });
+  }
 };

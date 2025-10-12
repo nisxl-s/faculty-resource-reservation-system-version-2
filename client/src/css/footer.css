@@ -6,6 +6,10 @@
     font-family: 'Arial', sans-serif;
     position: relative;
     overflow: hidden;
+    z-index: 10;
+    width: 100%;
+    clear: both;
+    margin-top: auto;
 }
 
 .footer::before {

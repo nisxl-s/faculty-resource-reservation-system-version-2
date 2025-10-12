@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
-import uniLogo from "../assets/images/uni_logo.png";
-import "../assets/css/nav.css";
+import uniLogo from "../../assets/images/uni_logo.png";
+import "../../assets/css/navbar.css";
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {

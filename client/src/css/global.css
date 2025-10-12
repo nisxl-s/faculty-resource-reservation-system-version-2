@@ -1,6 +1,6 @@
 /* Global Styles */
 :root {
-    
+    --navbar-height: 70px;
     --primary-color: #faea09;
     --secondary-color: #2c3e50;
     --accent-color: #e74c3c;
@@ -21,7 +21,7 @@
 
 body {
     background-color:#f2e6e6;
-    background-image: url('/bg-image.jpeg')!important;
+    background-image: url('../assets/images/bg image.jpeg');
     background-repeat: no-repeat;
     color: #333;
     line-height: 1.6;

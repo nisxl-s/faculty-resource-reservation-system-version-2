@@ -27,19 +27,22 @@ export function useNavbarEffects() {
 			if (activeItem) updateIndicator(activeItem);
 		}
 
-		const clickHandlers = [];
-		navItems.forEach(item => {
-			const handler = () => {
-				navItems.forEach(n => n.classList.remove('active'));
-				item.classList.add('active');
-				updateIndicator(item);
-				if (item.dataset.section) localStorage.setItem('activeSection', item.dataset.section);
-			};
-			item.addEventListener('click', handler);
-			clickHandlers.push({ item, handler });
-		});
-
-		function restoreActive() {
+	const clickHandlers = [];
+	navItems.forEach(item => {
+		const handler = (e) => {
+			// Only prevent default if href is # or empty
+			const href = item.getAttribute('href');
+			if (!href || href === '#' || href === 'javascript:void(0)') {
+				e.preventDefault();
+			}
+			navItems.forEach(n => n.classList.remove('active'));
+			item.classList.add('active');
+			updateIndicator(item);
+			if (item.dataset.section) localStorage.setItem('activeSection', item.dataset.section);
+		};
+		item.addEventListener('click', handler);
+		clickHandlers.push({ item, handler });
+	});		function restoreActive() {
 			const activeSection = localStorage.getItem('activeSection');
 			if (activeSection) {
 				navItems.forEach(item => {

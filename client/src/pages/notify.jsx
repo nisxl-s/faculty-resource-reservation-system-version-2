@@ -1,95 +1,133 @@
 import React, { useState, useEffect } from 'react';
-import { Bell, Check, Clock, X, User, Calendar, AlertCircle, Filter, Search, MoreVertical } from 'lucide-react';
-import "../css/notify.css";
+import { useNavigate } from 'react-router-dom';
+import { Bell, Check, Clock, X, User, Calendar, AlertCircle, Filter, Search, MoreVertical, Trash2, CheckCheck } from 'lucide-react';
+import "../assets/css/notify.css";
+import "../assets/css/user_management.css";
+import "../assets/css/global.css";
+import "../assets/css/navbar.css";
+import AdminHeader from '../components/AdminHeader';
+import Footer from '../components/footer/Footer';
+import { API_ENDPOINTS, getAuthHeaders, getCurrentUser } from '../config/api';
 
 // Main Notifications Component
 const NotificationsPage = () => {
+  const navigate = useNavigate();
+  
   // State for notifications data
   const [notifications, setNotifications] = useState([]);
   const [filteredNotifications, setFilteredNotifications] = useState([]);
   const [filter, setFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Sample notifications data
-  const initialNotifications = [
-    {
-      id: 1,
-      type: 'approved',
-      title: 'Reservation Approved',
-      message: 'Reservation for Library SR 3 on 2025-06-11 has been approved.',
-      time: '5 minutes ago',
-      timestamp: new Date(Date.now() - 5 * 60 * 1000),
-      read: false,
-      priority: 'high'
-    },
-    {
-      id: 2,
-      type: 'pending',
-      title: 'Reservation Pending',
-      message: 'Request for Lab Room 203 on 2025-06-14 is pending admin approval.',
-      time: '2 hours ago',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      read: false,
-      priority: 'medium'
-    },
-    {
-      id: 3,
-      type: 'rejected',
-      title: 'Reservation Rejected',
-      message: 'Reservation for Conference Hall on 2025-06-12 has been rejected.',
-      time: '1 day ago',
-      timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
-      read: true,
-      priority: 'medium'
-    },
-    {
-      id: 4,
-      type: 'registration',
-      title: 'User Registration',
-      message: 'Amali is registered as a new user in the system.',
-      time: '2 days ago',
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-      read: true,
-      priority: 'low'
-    },
-    {
-      id: 5,
-      type: 'approved',
-      title: 'Booking Confirmed',
-      message: 'Computer Lab A booking for 2025-06-15 has been confirmed.',
-      time: '3 days ago',
-      timestamp: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-      read: true,
-      priority: 'high'
-    },
-    {
-      id: 6,
-      type: 'pending',
-      title: 'Equipment Request',
-      message: 'New equipment request for Projector in Room 205 requires approval.',
-      time: '4 days ago',
-      timestamp: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
-      read: false,
-      priority: 'medium'
-    }
-  ];
+  // Format timestamp to relative time
+  const formatRelativeTime = (timestamp) => {
+    const now = new Date();
+    const notificationDate = new Date(timestamp);
+    const diffMs = now - notificationDate;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
 
-  // Load notifications on component mount
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+    return notificationDate.toLocaleDateString();
+  };
+
+  // Map notification type from database to UI type
+  const mapNotificationType = (dbType) => {
+    const typeMap = {
+      // Database enum types (info, success, warning, error)
+      'success': 'approved',
+      'error': 'rejected',
+      'warning': 'pending',
+      'info': 'registration',
+      // Legacy types for backward compatibility
+      'reservation_approved': 'approved',
+      'reservation_rejected': 'rejected',
+      'reservation_pending': 'pending',
+      'reservation_cancelled': 'rejected',
+      'user_registered': 'registration',
+      'system': 'registration'
+    };
+    return typeMap[dbType] || 'registration';
+  };
+
+  // Load notifications from backend
   useEffect(() => {
-    // Simulate API call
-    const loadNotifications = async () => {
-      setLoading(true);
-      // Simulate loading delay
-      setTimeout(() => {
-        setNotifications(initialNotifications);
-        setFilteredNotifications(initialNotifications);
+    const fetchNotifications = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Check if user is authenticated
+        const user = getCurrentUser();
+        if (!user) {
+          navigate('/login');
+          return;
+        }
+
+        // Use appropriate endpoint based on user role
+        const endpoint = user.role === 'admin' 
+          ? API_ENDPOINTS.NOTIFICATIONS_ALL 
+          : API_ENDPOINTS.NOTIFICATIONS;
+
+        // Fetch notifications from backend
+        const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: getAuthHeaders(),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('API Error Response:', response.status, errorText);
+          throw new Error(`Failed to fetch notifications: ${response.status} - ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log('Notifications API Response:', data);
+        
+        // Check if response has data
+        if (!data.success || !data.data || !data.data.notifications) {
+          console.error('Invalid response structure:', data);
+          throw new Error('Invalid response format from server');
+        }
+        
+        // Transform backend data to match UI structure
+        const transformedNotifications = data.data.notifications.map(notification => ({
+          id: notification.notification_id,
+          type: mapNotificationType(notification.type),
+          title: notification.title,
+          message: notification.message,
+          time: formatRelativeTime(notification.created_at),
+          timestamp: new Date(notification.created_at),
+          read: notification.is_read === 1,
+          priority: notification.type.includes('approved') ? 'high' : 
+                   notification.type.includes('rejected') ? 'medium' : 'low',
+          user_name: notification.user_name,
+          resource_name: notification.resource_name,
+          reservation_id: notification.reservation_id
+        }));
+
+        setNotifications(transformedNotifications);
+        setFilteredNotifications(transformedNotifications);
+      } catch (err) {
+        console.error('Error fetching notifications:', err);
+        setError(err.message);
+      } finally {
         setLoading(false);
-      }, 1000);
+      }
     };
 
-    loadNotifications();
-  }, []);
+    fetchNotifications();
+    
+    // Refresh notifications every 30 seconds
+    const interval = setInterval(fetchNotifications, 30000);
+    return () => clearInterval(interval);
+  }, [navigate]);
 
   // Filter notifications based on type and search term
   useEffect(() => {
@@ -116,100 +154,316 @@ const NotificationsPage = () => {
   }, [notifications, filter, searchTerm]);
 
   // Mark notification as read
-  const markAsRead = (id) => {
-    setNotifications(prev =>
-      prev.map(notification =>
-        notification.id === id
-          ? { ...notification, read: true }
-          : notification
-      )
-    );
+  const markAsRead = async (id) => {
+    try {
+      const response = await fetch(API_ENDPOINTS.NOTIFICATION_READ(id), {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to mark notification as read');
+      }
+
+      // Update local state
+      setNotifications(prev =>
+        prev.map(notification =>
+          notification.id === id
+            ? { ...notification, read: true }
+            : notification
+        )
+      );
+    } catch (err) {
+      console.error('Error marking notification as read:', err);
+    }
   };
 
   // Mark all notifications as read
-  const markAllAsRead = () => {
-    setNotifications(prev =>
-      prev.map(notification => ({ ...notification, read: true }))
-    );
+  const markAllAsRead = async () => {
+    try {
+      const response = await fetch(API_ENDPOINTS.NOTIFICATION_READ_ALL, {
+        method: 'PATCH',
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to mark all notifications as read');
+      }
+
+      // Update local state
+      setNotifications(prev =>
+        prev.map(notification => ({ ...notification, read: true }))
+      );
+    } catch (err) {
+      console.error('Error marking all notifications as read:', err);
+    }
   };
 
   // Delete notification
-  const deleteNotification = (id) => {
-    setNotifications(prev =>
-      prev.filter(notification => notification.id !== id)
-    );
+  const deleteNotification = async (id) => {
+    try {
+      const response = await fetch(API_ENDPOINTS.NOTIFICATION_DELETE(id), {
+        method: 'DELETE',
+        headers: getAuthHeaders(),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete notification');
+      }
+
+      // Update local state
+      setNotifications(prev =>
+        prev.filter(notification => notification.id !== id)
+      );
+    } catch (err) {
+      console.error('Error deleting notification:', err);
+    }
   };
 
   // Get unread count
   const unreadCount = notifications.filter(n => !n.read).length;
 
   if (loading) {
-    return <NotificationsSkeleton />;
+    return (
+      <>
+        <AdminHeader />
+        <div className="background" style={{paddingTop: '130px'}}>
+          <NotificationsSkeleton />
+        </div>
+        <Footer />
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <>
+        <AdminHeader />
+        <div className="background" style={{paddingTop: '130px'}}>
+          <div className="user-management-page">
+            <div className="error-state" style={{
+              textAlign: 'center',
+              padding: '60px 20px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(25px)',
+              borderRadius: '20px',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}>
+              <AlertCircle size={64} color="#ef4444" style={{marginBottom: '20px'}} />
+              <h3 style={{color: '#fff', marginBottom: '10px'}}>Error Loading Notifications</h3>
+              <p style={{color: 'rgba(255, 255, 255, 0.7)'}}>{error}</p>
+            </div>
+          </div>
+        </div>
+        <Footer />
+      </>
+    );
   }
 
   return (
-    <div className="background">
-    <div className="notifications-page">
-      {/* Page Header */}
-      <div className="notifications-header">
-        <div className="header-content">
-          <div className="title-section">
-            <div className="title-with-icon">
-              <Bell className="header-icon" size={32} />
-              <div>
-                <h1>Notifications</h1>
-                <p>Here are your recent updates</p>
-              </div>
+    <>
+    <AdminHeader />
+    <div className="background" style={{paddingTop: '160px'}}>
+    <div className="user-management-page" style={{
+      maxWidth: '1200px',
+      margin: '0 auto',
+      padding: '0 20px'
+    }}>
+      {/* Page Header with Glassmorphism */}
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(25px)',
+        WebkitBackdropFilter: 'blur(25px)',
+        borderRadius: '20px',
+        padding: '30px',
+        marginBottom: '30px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)'
+      }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '20px'
+        }}>
+          <div style={{display: 'flex', alignItems: 'center', gap: '20px'}}>
+            <div style={{
+              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2))',
+              borderRadius: '15px',
+              padding: '15px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              <Bell size={32} color="#fff" />
+            </div>
+            <div>
+              <h1 style={{
+                color: '#fff',
+                fontSize: '32px',
+                fontWeight: '700',
+                margin: '0 0 8px 0',
+                textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
+              }}>Notifications</h1>
+              <p style={{
+                color: 'rgba(255, 255, 255, 0.7)',
+                fontSize: '16px',
+                margin: 0
+              }}>Stay updated with your recent activities</p>
             </div>
             {unreadCount > 0 && (
-              <span className="unread-badge">{unreadCount} unread</span>
+              <span style={{
+                background: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                color: '#fff',
+                padding: '8px 16px',
+                borderRadius: '30px',
+                fontSize: '14px',
+                fontWeight: '600',
+                boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)'
+              }}>{unreadCount} unread</span>
             )}
           </div>
           
           {unreadCount > 0 && (
             <button 
-              className="mark-all-btn"
               onClick={markAllAsRead}
+              style={{
+                background: 'linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.2))',
+                border: '1px solid rgba(34, 197, 94, 0.3)',
+                color: '#fff',
+                padding: '12px 24px',
+                borderRadius: '12px',
+                fontSize: '14px',
+                fontWeight: '600',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.3s ease',
+                backdropFilter: 'blur(10px)'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.3), rgba(22, 163, 74, 0.3))';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.2))';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
             >
-              <Check size={16} />
+              <CheckCheck size={16} />
               Mark all as read
             </button>
           )}
         </div>
       </div>
 
-      {/* Filters and Search */}
-      <div className="notifications-controls">
-        <div className="search-container">
-          <Search className="search-icon" size={20} />
+      {/* Filters and Search with Glassmorphism */}
+      <div style={{
+        display: 'flex',
+        gap: '20px',
+        marginBottom: '30px',
+        flexWrap: 'wrap'
+      }}>
+        <div style={{
+          flex: '1',
+          minWidth: '300px',
+          position: 'relative'
+        }}>
+          <Search 
+            size={20} 
+            style={{
+              position: 'absolute',
+              left: '15px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'rgba(255, 255, 255, 0.5)',
+              pointerEvents: 'none'
+            }}
+          />
           <input
             type="text"
             placeholder="Search notifications..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="search-input"
+            style={{
+              width: '100%',
+              padding: '12px 15px 12px 45px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(25px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '12px',
+              color: '#fff',
+              fontSize: '14px',
+              outline: 'none',
+              transition: 'all 0.3s ease'
+            }}
+            onFocus={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.08)';
+              e.target.style.borderColor = 'rgba(59, 130, 246, 0.5)';
+            }}
+            onBlur={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            }}
           />
         </div>
 
-        <div className="filter-container">
-          <Filter className="filter-icon" size={16} />
+        <div style={{position: 'relative', minWidth: '200px'}}>
+          <Filter 
+            size={16} 
+            style={{
+              position: 'absolute',
+              left: '15px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'rgba(255, 255, 255, 0.5)',
+              pointerEvents: 'none'
+            }}
+          />
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="filter-select"
+            style={{
+              width: '100%',
+              padding: '12px 15px 12px 40px',
+              background: 'rgba(255, 255, 255, 0.05)',
+              backdropFilter: 'blur(25px)',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              borderRadius: '12px',
+              color: '#fff',
+              fontSize: '14px',
+              outline: 'none',
+              cursor: 'pointer',
+              appearance: 'none',
+              transition: 'all 0.3s ease'
+            }}
+            onFocus={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.08)';
+              e.target.style.borderColor = 'rgba(59, 130, 246, 0.5)';
+            }}
+            onBlur={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.05)';
+              e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            }}
           >
-            <option value="all">All Notifications</option>
-            <option value="unread">Unread Only</option>
-            <option value="approved">Approved</option>
-            <option value="pending">Pending</option>
-            <option value="rejected">Rejected</option>
-            <option value="registration">Registration</option>
+            <option value="all" style={{background: '#1a1a1a', color: '#fff'}}>All Notifications</option>
+            <option value="unread" style={{background: '#1a1a1a', color: '#fff'}}>Unread Only</option>
+            <option value="approved" style={{background: '#1a1a1a', color: '#fff'}}>Approved</option>
+            <option value="pending" style={{background: '#1a1a1a', color: '#fff'}}>Pending</option>
+            <option value="rejected" style={{background: '#1a1a1a', color: '#fff'}}>Rejected</option>
+            <option value="registration" style={{background: '#1a1a1a', color: '#fff'}}>Registration</option>
           </select>
         </div>
       </div>
 
-      {/* Notifications List */}
-      <div className="notifications-list">
+      {/* Notifications List with Glassmorphism */}
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '10px'
+      }}>
         {filteredNotifications.length === 0 ? (
           <EmptyState searchTerm={searchTerm} filter={filter} />
         ) : (
@@ -225,6 +479,8 @@ const NotificationsPage = () => {
       </div>
     </div>
     </div>
+    <Footer />
+    </>
   );
 };
 
@@ -232,84 +488,293 @@ const NotificationsPage = () => {
 const NotificationItem = ({ notification, onMarkAsRead, onDelete }) => {
   const [showMenu, setShowMenu] = useState(false);
 
-  // Get notification icon based on type
-  const getNotificationIcon = (type) => {
+  // Get notification icon and color based on type
+  const getNotificationStyle = (type) => {
     switch (type) {
       case 'approved':
-        return <Check className="notification-type-icon approved-icon" size={24} />;
+        return {
+          icon: <Check size={24} />,
+          bgColor: 'rgba(34, 197, 94, 0.15)',
+          borderColor: 'rgba(34, 197, 94, 0.3)',
+          iconColor: '#22c55e'
+        };
       case 'pending':
-        return <Clock className="notification-type-icon pending-icon" size={24} />;
+        return {
+          icon: <Clock size={24} />,
+          bgColor: 'rgba(234, 179, 8, 0.15)',
+          borderColor: 'rgba(234, 179, 8, 0.3)',
+          iconColor: '#eab308'
+        };
       case 'rejected':
-        return <X className="notification-type-icon rejected-icon" size={24} />;
+        return {
+          icon: <X size={24} />,
+          bgColor: 'rgba(239, 68, 68, 0.15)',
+          borderColor: 'rgba(239, 68, 68, 0.3)',
+          iconColor: '#ef4444'
+        };
       case 'registration':
-        return <User className="notification-type-icon registration-icon" size={24} />;
+        return {
+          icon: <User size={24} />,
+          bgColor: 'rgba(59, 130, 246, 0.15)',
+          borderColor: 'rgba(59, 130, 246, 0.3)',
+          iconColor: '#3b82f6'
+        };
       default:
-        return <Bell className="notification-type-icon default-icon" size={24} />;
+        return {
+          icon: <Bell size={24} />,
+          bgColor: 'rgba(168, 85, 247, 0.15)',
+          borderColor: 'rgba(168, 85, 247, 0.3)',
+          iconColor: '#a855f7'
+        };
     }
   };
 
-  // Get priority indicator
-  const getPriorityClass = (priority) => {
-    switch (priority) {
-      case 'high': return 'priority-high';
-      case 'medium': return 'priority-medium';
-      case 'low': return 'priority-low';
-      default: return '';
-    }
-  };
+  const style = getNotificationStyle(notification.type);
 
   return (
-    <div className={`notification-item ${notification.type} ${!notification.read ? 'unread' : 'read'}`}>
-      <div className={`priority-indicator ${getPriorityClass(notification.priority)}`}></div>
-      
-      <div className="notification-icon">
-        {getNotificationIcon(notification.type)}
+    <div style={{
+      background: notification.read 
+        ? 'rgba(255, 255, 255, 0.03)' 
+        : 'rgba(255, 255, 255, 0.08)',
+      backdropFilter: 'blur(25px)',
+      WebkitBackdropFilter: 'blur(25px)',
+      borderRadius: '12px',
+      padding: '14px 16px',
+      border: `1px solid ${notification.read ? 'rgba(255, 255, 255, 0.05)' : style.borderColor}`,
+      display: 'flex',
+      gap: '14px',
+      alignItems: 'flex-start',
+      position: 'relative',
+      transition: 'all 0.3s ease',
+      cursor: 'pointer',
+      boxShadow: notification.read 
+        ? '0 3px 10px rgba(0, 0, 0, 0.08)' 
+        : '0 4px 15px rgba(0, 0, 0, 0.15)'
+    }}
+    onMouseOver={(e) => {
+      e.currentTarget.style.transform = 'translateY(-1px)';
+      e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.2)';
+    }}
+    onMouseOut={(e) => {
+      e.currentTarget.style.transform = 'translateY(0)';
+      e.currentTarget.style.boxShadow = notification.read 
+        ? '0 3px 10px rgba(0, 0, 0, 0.08)' 
+        : '0 4px 15px rgba(0, 0, 0, 0.15)';
+    }}>
+      {/* Icon */}
+      <div style={{
+        background: style.bgColor,
+        borderRadius: '10px',
+        padding: '10px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        border: `1px solid ${style.borderColor}`,
+        flexShrink: 0,
+        color: style.iconColor,
+        width: '40px',
+        height: '40px'
+      }}>
+        {React.cloneElement(style.icon, { size: 20 })}
       </div>
       
-      <div className="notification-content">
-        <div className="notification-header">
-          <h3 className="notification-title">{notification.title}</h3>
-          <div className="notification-actions">
-            <span className="notification-time">{notification.time}</span>
-            <button 
-              className="menu-toggle"
-              onClick={() => setShowMenu(!showMenu)}
-            >
-              <MoreVertical size={16} />
-            </button>
+      {/* Content */}
+      <div style={{flex: 1, minWidth: 0}}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          marginBottom: '6px',
+          gap: '12px'
+        }}>
+          <h3 style={{
+            color: '#fff',
+            fontSize: '15px',
+            fontWeight: '600',
+            margin: 0,
+            flex: 1,
+            lineHeight: '1.4'
+          }}>{notification.title}</h3>
+          
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            flexShrink: 0
+          }}>
+            <span style={{
+              color: 'rgba(255, 255, 255, 0.5)',
+              fontSize: '12px',
+              whiteSpace: 'nowrap'
+            }}>{notification.time}</span>
             
-            {showMenu && (
-              <div className="notification-menu">
-                {!notification.read && (
+            <div style={{position: 'relative'}}>
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowMenu(!showMenu);
+                }}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '6px',
+                  padding: '5px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#fff',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                }}
+              >
+                <MoreVertical size={16} />
+              </button>
+              
+              {showMenu && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '8px',
+                  background: 'rgba(30, 30, 30, 0.95)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '12px',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  boxShadow: '0 10px 40px rgba(0, 0, 0, 0.4)',
+                  zIndex: 1000,
+                  minWidth: '160px',
+                  overflow: 'hidden'
+                }}>
+                  {!notification.read && (
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onMarkAsRead(notification.id);
+                        setShowMenu(false);
+                      }}
+                      style={{
+                        width: '100%',
+                        padding: '12px 16px',
+                        background: 'transparent',
+                        border: 'none',
+                        color: '#fff',
+                        fontSize: '14px',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '10px',
+                        transition: 'all 0.2s ease',
+                        textAlign: 'left'
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.background = 'rgba(34, 197, 94, 0.2)';
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.background = 'transparent';
+                      }}
+                    >
+                      <Check size={14} />
+                      Mark as read
+                    </button>
+                  )}
                   <button 
-                    onClick={() => {
-                      onMarkAsRead(notification.id);
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete(notification.id);
                       setShowMenu(false);
                     }}
-                    className="menu-item"
+                    style={{
+                      width: '100%',
+                      padding: '12px 16px',
+                      background: 'transparent',
+                      border: 'none',
+                      color: '#ef4444',
+                      fontSize: '14px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      transition: 'all 0.2s ease',
+                      textAlign: 'left'
+                    }}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.background = 'rgba(239, 68, 68, 0.2)';
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.background = 'transparent';
+                    }}
                   >
-                    <Check size={14} />
-                    Mark as read
+                    <Trash2 size={14} />
+                    Delete
                   </button>
-                )}
-                <button 
-                  onClick={() => {
-                    onDelete(notification.id);
-                    setShowMenu(false);
-                  }}
-                  className="menu-item delete"
-                >
-                  <X size={14} />
-                  Delete
-                </button>
-              </div>
-            )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-        <p className="notification-message">{notification.message}</p>
+        
+        <p style={{
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: '13px',
+          margin: 0,
+          lineHeight: '1.5'
+        }}>{notification.message}</p>
+
+        {/* Additional info if available */}
+        {(notification.user_name || notification.resource_name) && (
+          <div style={{
+            marginTop: '8px',
+            display: 'flex',
+            gap: '12px',
+            flexWrap: 'wrap'
+          }}>
+            {notification.user_name && (
+              <span style={{
+                fontSize: '11px',
+                color: 'rgba(255, 255, 255, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}>
+                <User size={11} />
+                {notification.user_name}
+              </span>
+            )}
+            {notification.resource_name && (
+              <span style={{
+                fontSize: '11px',
+                color: 'rgba(255, 255, 255, 0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}>
+                <Calendar size={11} />
+                {notification.resource_name}
+              </span>
+            )}
+          </div>
+        )}
       </div>
       
-      {!notification.read && <div className="unread-indicator"></div>}
+      {/* Unread indicator */}
+      {!notification.read && (
+        <div style={{
+          position: 'absolute',
+          top: '14px',
+          right: '14px',
+          width: '6px',
+          height: '6px',
+          borderRadius: '50%',
+          background: style.iconColor,
+          boxShadow: `0 0 8px ${style.iconColor}`
+        }}></div>
+      )}
     </div>
   );
 };
@@ -330,36 +795,146 @@ const EmptyState = ({ searchTerm, filter }) => {
   };
 
   return (
-    <div className="empty-state">
-      <AlertCircle className="empty-icon" size={64} />
-      <h3>{getEmptyMessage()}</h3>
-      <p>Check back later for new updates</p>
+    <div style={{
+      textAlign: 'center',
+      padding: '80px 20px',
+      background: 'rgba(255, 255, 255, 0.03)',
+      backdropFilter: 'blur(25px)',
+      borderRadius: '20px',
+      border: '1px solid rgba(255, 255, 255, 0.1)'
+    }}>
+      <div style={{
+        background: 'rgba(168, 85, 247, 0.1)',
+        borderRadius: '50%',
+        width: '100px',
+        height: '100px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto 24px',
+        border: '2px solid rgba(168, 85, 247, 0.2)'
+      }}>
+        <Bell size={48} color="rgba(168, 85, 247, 0.8)" />
+      </div>
+      <h3 style={{
+        color: '#fff',
+        fontSize: '24px',
+        fontWeight: '600',
+        marginBottom: '12px'
+      }}>{getEmptyMessage()}</h3>
+      <p style={{
+        color: 'rgba(255, 255, 255, 0.6)',
+        fontSize: '16px',
+        margin: 0
+      }}>Check back later for new updates</p>
     </div>
   );
 };
 
 // Loading Skeleton Component
 const NotificationsSkeleton = () => {
+  const skeletonAnimation = {
+    animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+  };
+
   return (
-    <div className="notifications-page">
-      <div className="notifications-header">
-        <div className="skeleton skeleton-header"></div>
+    <div className="user-management-page">
+      <style>{`
+        @keyframes pulse {
+          0%, 100% { opacity: 0.4; }
+          50% { opacity: 0.6; }
+        }
+      `}</style>
+      
+      {/* Header Skeleton */}
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(25px)',
+        borderRadius: '20px',
+        padding: '30px',
+        marginBottom: '30px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        ...skeletonAnimation
+      }}>
+        <div style={{
+          width: '300px',
+          height: '40px',
+          background: 'rgba(255, 255, 255, 0.1)',
+          borderRadius: '8px'
+        }}></div>
       </div>
-      <div className="notifications-controls">
-        <div className="skeleton skeleton-search"></div>
-        <div className="skeleton skeleton-filter"></div>
+      
+      {/* Controls Skeleton */}
+      <div style={{
+        display: 'flex',
+        gap: '20px',
+        marginBottom: '30px'
+      }}>
+        <div style={{
+          flex: 1,
+          height: '48px',
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(25px)',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          ...skeletonAnimation
+        }}></div>
+        <div style={{
+          width: '200px',
+          height: '48px',
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(25px)',
+          borderRadius: '12px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          ...skeletonAnimation
+        }}></div>
       </div>
-      <div className="notifications-list">
-        {[1, 2, 3, 4, 5].map(i => (
-          <div key={i} className="skeleton-notification">
-            <div className="skeleton skeleton-icon"></div>
-            <div className="skeleton-content">
-              <div className="skeleton skeleton-title"></div>
-              <div className="skeleton skeleton-message"></div>
-            </div>
+      
+      {/* Notification Items Skeleton */}
+      {[1, 2, 3, 4, 5].map(i => (
+        <div key={i} style={{
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(25px)',
+          borderRadius: '16px',
+          padding: '20px',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          display: 'flex',
+          gap: '20px',
+          marginBottom: '15px',
+          ...skeletonAnimation,
+          animationDelay: `${i * 0.1}s`
+        }}>
+          <div style={{
+            width: '48px',
+            height: '48px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            borderRadius: '12px',
+            flexShrink: 0
+          }}></div>
+          <div style={{flex: 1}}>
+            <div style={{
+              width: '60%',
+              height: '20px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '4px',
+              marginBottom: '12px'
+            }}></div>
+            <div style={{
+              width: '100%',
+              height: '16px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '4px',
+              marginBottom: '8px'
+            }}></div>
+            <div style={{
+              width: '80%',
+              height: '16px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              borderRadius: '4px'
+            }}></div>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };

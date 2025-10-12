@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.0rem 2rem;
+    padding: 0.6rem 2rem;
     background-color: rgba(0, 4, 255, 0);
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 20px rgba(26, 76, 141, 0.555);
@@ -19,7 +19,7 @@
     background-color: rgba(0, 38, 73, 0.85);
     backdrop-filter: blur(15px);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-    padding: 0.1rem 2rem;
+    padding: 0.4rem 2rem;
 }
 
 .logo {

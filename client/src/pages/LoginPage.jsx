@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useNavbarEffects, useMobileNav } from '../hooks/effects';
-
-import uniLogo from '../images/uni_logo.png';
+import { API_ENDPOINTS } from '../config/api';
+import uniLogo from '../assets/images/uni_logo.png';
 
 // CSS (adjust paths to match your project)
-import './assets/css/login_styles.css';
-import './assets/css/navbar.css';
-import './assets/css/global.css';
-import './assets/css/features.css';
+import '../assets/css/login_styles.css';
+import '../assets/css/navbar.css';
+import '../assets/css/global.css';
+import '../assets/css/features.css';
 
 export default function LoginPage() {
 	useNavbarEffects();
@@ -19,16 +19,52 @@ export default function LoginPage() {
 	const [remember, setRemember] = useState(false);
 	const navigate = useNavigate();
 
-	function onSubmit(e) {
+	async function onSubmit(e) {
 		e.preventDefault();
 		if (!email || !password) {
 			alert('Please fill in all fields');
 			return;
 		}
-		console.log('Login submitted:', { email, password });
-		alert('Login successful! Redirecting to dashboard...');
-		// Replace with your actual destination; using home for now:
-		navigate('/');
+
+		try {
+			// Call the backend API
+			const response = await fetch(API_ENDPOINTS.LOGIN, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ email, password }),
+			});
+
+			const data = await response.json();
+			
+			console.log('Login response:', data); // Debug log
+
+			if (response.ok && data.success) {
+				// Backend returns data in data.data object
+				const { token, user } = data.data;
+				
+				// Store token and user info
+				localStorage.setItem('token', token);
+				localStorage.setItem('user', JSON.stringify(user));
+
+				alert('Login successful! Redirecting...');
+
+				// Redirect based on user role
+				if (user.role === 'admin') {
+					navigate('/admin');
+				} else if (user.role === 'faculty' || user.role === 'student') {
+					navigate('/student');
+				} else {
+					navigate('/student');
+				}
+			} else {
+				alert(data.message || 'Login failed. Please check your credentials.');
+			}
+		} catch (error) {
+			console.error('Login error:', error);
+			alert('An error occurred during login. Please try again.');
+		}
 	}
 
 	return (

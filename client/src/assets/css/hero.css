@@ -3,9 +3,10 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8rem 2rem 4rem;
+    padding: 10rem 2rem 6rem;
     max-width: 1200px;
     margin: 0 auto;
+    min-height: 70vh;
 }
 
 .hero-content {
@@ -14,16 +15,20 @@
 }
 
 .hero-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
+    font-size: 2.8rem;
+    margin-bottom: 1.5rem;
     color: var(--light-color);
-    align-items: left;
+    text-align: left;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+    line-height: 1.2;
 }
 
 .hero-content p {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     margin-bottom: 2rem;
     color: #faea09;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+    line-height: 1.6;
 }
 
 .hero-buttons {
@@ -42,11 +47,10 @@
 /* About Us Section */
 .about-us {
     position: relative;
-    padding: 50px 30px;
-    margin: 0;
+    padding: 80px 30px;
+    margin: 4rem 0;
     text-align: center;
-    min-height: 60vh;
-    line-height: 10vh;
+    min-height: 50vh;
     z-index: 1;
     overflow: hidden;
 }
@@ -56,7 +60,7 @@
     position: absolute;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background-image: url('./images/about_us_bg.jpg');
+    background-image: url('../images/about_us_bg.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
@@ -66,17 +70,27 @@
 }
 
 .about-us h2 {
-    font-size: 2em;
+    font-size: 2.5em;
     color: #faea09;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .about-content {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
-    font-size: 1.5em;
-    font-weight: 500;
+    font-size: 1.2em;
+    font-weight: 400;
     color: var(--light-color);
-    line-height: 1.6;
+    line-height: 1.8;
+}
+
+.about-content p {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
 }
 
 .quote-mark {
@@ -89,19 +103,40 @@
 @media screen and (max-width: 768px) {
     .hero {
         flex-direction: column;
-        padding-top: 6rem;
+        padding: 8rem 1rem 3rem;
+        min-height: auto;
     }
 
     .hero-content {
         padding-right: 0;
         margin-bottom: 2rem;
+        text-align: center;
     }
 
     .hero-content h1 {
         font-size: 2rem;
+        text-align: center;
     }
 
     .hero-content p {
         font-size: 1.1rem;
+    }
+
+    .hero-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .about-us {
+        padding: 50px 20px;
+        min-height: auto;
+    }
+
+    .about-us h2 {
+        font-size: 2em;
+    }
+
+    .about-content {
+        font-size: 1em;
     }
 }

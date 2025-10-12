@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useNavbarEffects, useMobileNav } from '../hooks/effects';
-import uniLogo from '../images/uni_logo.png';
+import { API_ENDPOINTS } from '../config/api';
+import uniLogo from '../assets/images/uni_logo.png';
 
 // CSS (adjust paths to match your project)
 
-import './assets/css/navbar.css';
-import './assets/css/reg_styles.css';
+import '../assets/css/navbar.css';
+import '../assets/css/reg_styles.css';
 
 export default function RegisterPage() {
 	useNavbarEffects();
@@ -20,7 +21,7 @@ export default function RegisterPage() {
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const navigate = useNavigate();
 
-	function onSubmit(e) {
+	async function onSubmit(e) {
 		e.preventDefault();
 
 		if (!fullName || !email || !facultyId || !department || !password || !confirmPassword) {
@@ -31,14 +32,62 @@ export default function RegisterPage() {
 			alert('Passwords do not match');
 			return;
 		}
-		if (password.length < 8) {
-			alert('Password must be at least 8 characters long');
+		if (password.length < 6) {
+			alert('Password must be at least 6 characters long');
+			return;
+		}
+		
+		// Email validation
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(email)) {
+			alert('Please enter a valid email address');
 			return;
 		}
 
-		console.log('Registration submitted:', { fullName, email, facultyId, department, password });
-		alert('Registration successful! You can now login.');
-		navigate('/login');
+		try {
+			console.log('Attempting registration with:', {
+				full_name: fullName,
+				email: email,
+				role: 'student',
+				department: department,
+				phone: facultyId
+			});
+
+			// Call the backend API
+			const response = await fetch(API_ENDPOINTS.REGISTER, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					full_name: fullName,  // Changed from 'name' to 'full_name'
+					email: email,
+					password: password,
+					role: 'student',  // Default to student for registration
+					department: department,
+					phone: facultyId  // Using phone field instead of faculty_id
+				}),
+			});
+
+			const data = await response.json();
+			console.log('Registration response:', data);
+
+			if (response.ok && data.success) {
+				alert('Registration successful! You can now login.');
+				navigate('/login');
+			} else {
+				// Show detailed error message
+				if (data.errors && Array.isArray(data.errors)) {
+					const errorMessages = data.errors.map(err => err.msg).join('\n');
+					alert('Registration failed:\n' + errorMessages);
+				} else {
+					alert(data.message || 'Registration failed. Please try again.');
+				}
+			}
+		} catch (error) {
+			console.error('Registration error:', error);
+			alert('An error occurred during registration. Please try again.');
+		}
 	}
 
 	return (

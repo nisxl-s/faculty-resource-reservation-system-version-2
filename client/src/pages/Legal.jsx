@@ -1,7 +1,7 @@
 // src/pages/Legal.jsx
 import React, { useEffect } from "react";
-import "../css/helpstyle.css"; // existing styles
-import "../css/legal.css";     // new styles we just created
+import "../assets/css/helpstyle.css"; // existing styles
+import "../assets/css/legal.css";     // new styles we just created
 
 export default function Legal() {
   // back-to-top button behavior
