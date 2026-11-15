@@ -1,0 +1,46 @@
+[
+  {
+    "code": "FHSS",
+    "name": "Faculty of Humanities and Social Sciences"
+  },
+  {
+    "code": "FAS",
+    "name": "Faculty of Applied Sciences"
+  },
+  {
+    "code": "FMSC",
+    "name": "Faculty of Management Studies and Commerce"
+  },
+  {
+    "code": "FMS",
+    "name": "Faculty of Medical Sciences"
+  },
+  {
+    "code": "FGS",
+    "name": "Faculty of Graduate Studies"
+  },
+  {
+    "code": "FOE",
+    "name": "Faculty of Engineering"
+  },
+  {
+    "code": "FOT",
+    "name": "Faculty of Technology"
+  },
+  {
+    "code": "FAHS",
+    "name": "Faculty of Allied Health Sciences"
+  },
+  {
+    "code": "FDS",
+    "name": "Faculty of Dental Sciences"
+  },
+  {
+    "code": "FUAB",
+    "name": "Faculty of Urban and Aquatic Bioresources"
+  },
+  {
+    "code": "FOC",
+    "name": "Faculty of Computing"
+  }
+]
