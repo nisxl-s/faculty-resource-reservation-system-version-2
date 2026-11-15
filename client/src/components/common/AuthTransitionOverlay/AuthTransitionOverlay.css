@@ -1,0 +1,358 @@
+/* ═══════════════════════════════════════════════════════════════════
+   AUTH TRANSITION OVERLAYS: SYSTEM GLASSMORPHIC & GRAINIENT THEME
+   Strictly aligned with system colors (#faea09, #274fff, #00a8ff, #0e1144)
+   and translucent glass so background animated gradient shines through.
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Translucent Backdrop (Allows Grainient background animation to shine through) ── */
+/* Both auth transitions keep the page gradient, without exposing the footer. */
+body:has(.ato-overlay) footer.uf-footer {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.ato-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    animation: atoBackdropFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    padding: 24px;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+@keyframes atoBackdropFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ── Glassmorphic Modal Card (Matches .auth-formLogin & .auth-formRegister) ── */
+.ato-card {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    background: rgba(8, 14, 28, 0.82);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 0 0 1px rgba(26, 77, 143, 0.22),
+        0 24px 60px rgba(0, 0, 0, 0.65),
+        0 0 50px rgba(26, 77, 143, 0.15);
+    padding: 40px 32px 34px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    animation: atoCardPopIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    color: #fff;
+    box-sizing: border-box;
+}
+
+@keyframes atoCardPopIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Glassmorphic Ambient Top Glow */
+.ato-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(180deg, rgba(26, 77, 143, 0.28) 0%, transparent 100%);
+    border-radius: 24px 24px 0 0;
+    pointer-events: none;
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   VISUAL ANIMATION STAGE (Rings, Pulses, Badges)
+   ─────────────────────────────────────────────────────────────────── */
+.ato-visual-stage {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+}
+
+.ato-ring {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    animation: atoSpin 8s linear infinite;
+}
+
+.ato-ring-inner {
+    position: absolute;
+    inset: 12px;
+    border-radius: 50%;
+    animation: atoSpinReverse 4s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.ato-glow-pulse {
+    position: absolute;
+    inset: 16px;
+    border-radius: 50%;
+    animation: atoPulse 1.6s ease-in-out infinite alternate;
+}
+
+/* Unified System Icon Badge (Matches .lg-header-icon) */
+.ato-icon-badge {
+    position: relative;
+    z-index: 2;
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(26, 77, 143, 0.65), rgba(14, 17, 68, 0.88));
+    animation: atoBadgePop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.ato-icon-badge svg {
+    width: 32px;
+    height: 32px;
+    stroke-width: 2.2;
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   1. ACCESS GRANTED MODE (System Royal & Electric Cyan Palette)
+   ─────────────────────────────────────────────────────────────────── */
+.ato-card.ato-mode-access {
+    border-color: rgba(0, 168, 255, 0.32);
+    box-shadow: 
+        0 0 0 1px rgba(0, 168, 255, 0.2),
+        0 24px 60px rgba(0, 0, 0, 0.7),
+        0 0 50px rgba(39, 79, 255, 0.25);
+}
+
+.ato-mode-access .ato-ring {
+    border: 2px dashed rgba(0, 168, 255, 0.35);
+    border-top-color: #00a8ff;
+}
+
+.ato-mode-access .ato-ring-inner {
+    border: 1.5px solid rgba(39, 79, 255, 0.6);
+    border-left-color: transparent;
+    border-right-color: transparent;
+}
+
+.ato-mode-access .ato-glow-pulse {
+    background: radial-gradient(circle, rgba(0, 168, 255, 0.28) 0%, transparent 70%);
+}
+
+.ato-mode-access .ato-icon-badge {
+    border: 1px solid rgba(0, 168, 255, 0.55);
+    color: #00a8ff;
+    box-shadow: 
+        0 8px 24px rgba(26, 77, 143, 0.5), 
+        0 0 25px rgba(0, 168, 255, 0.35);
+}
+
+.ato-mode-access .ato-pre-title {
+    color: #00a8ff;
+}
+
+.ato-mode-access .ato-main-heading {
+    background: linear-gradient(135deg, #ffffff 40%, #00a8ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 25px rgba(0, 168, 255, 0.35);
+}
+
+.ato-mode-access .ato-progress-fill {
+    background: linear-gradient(90deg, #0e1144, #1a4d8f, #274fff, #00a8ff);
+    box-shadow: 0 0 12px rgba(0, 168, 255, 0.65);
+}
+
+.ato-mode-access .ato-live-dot {
+    background: #00a8ff;
+    box-shadow: 0 0 8px #00a8ff;
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   2. ACCOUNT CREATED MODE (System Gold #faea09 & Royal Blue Palette)
+   ─────────────────────────────────────────────────────────────────── */
+.ato-card.ato-mode-account {
+    border-color: rgba(250, 234, 9, 0.32);
+    box-shadow: 
+        0 0 0 1px rgba(250, 234, 9, 0.18),
+        0 24px 60px rgba(0, 0, 0, 0.7),
+        0 0 50px rgba(250, 234, 9, 0.22);
+}
+
+.ato-mode-account .ato-ring {
+    border: 2px dotted rgba(250, 234, 9, 0.4);
+    border-top-color: #faea09;
+}
+
+.ato-mode-account .ato-ring-inner {
+    border: 1.5px solid rgba(39, 79, 255, 0.65);
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+}
+
+.ato-mode-account .ato-glow-pulse {
+    background: radial-gradient(circle, rgba(250, 234, 9, 0.25) 0%, transparent 70%);
+}
+
+.ato-mode-account .ato-icon-badge {
+    border: 1px solid rgba(250, 234, 9, 0.45);
+    color: #faea09;
+    box-shadow: 
+        0 8px 24px rgba(26, 77, 143, 0.5), 
+        0 0 25px rgba(250, 234, 9, 0.35);
+}
+
+.ato-mode-account .ato-pre-title {
+    color: #faea09;
+}
+
+.ato-mode-account .ato-main-heading {
+    background: linear-gradient(135deg, #ffffff 40%, #faea09 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 25px rgba(250, 234, 9, 0.35);
+}
+
+.ato-mode-account .ato-progress-fill {
+    background: linear-gradient(90deg, #0e1144, #1a4d8f, #f59e0b, #faea09);
+    box-shadow: 0 0 12px rgba(250, 234, 9, 0.65);
+}
+
+.ato-mode-account .ato-live-dot {
+    background: #faea09;
+    box-shadow: 0 0 8px #faea09;
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   TYPOGRAPHY & READOUTS
+   ─────────────────────────────────────────────────────────────────── */
+.ato-pre-title {
+    position: relative;
+    z-index: 1;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ato-main-heading {
+    position: relative;
+    z-index: 1;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ato-sub-message {
+    position: relative;
+    z-index: 1;
+    font-size: 0.94rem;
+    color: rgba(226, 232, 240, 0.88);
+    margin: 0 0 24px 0;
+    line-height: 1.5;
+    max-width: 380px;
+}
+
+/* Progress Fill Bar */
+.ato-progress-track {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 14px;
+}
+
+.ato-progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    animation: atoFillProgress 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes atoFillProgress {
+    0% { width: 0%; }
+    55% { width: 70%; }
+    100% { width: 100%; }
+}
+
+.ato-status-tag {
+    position: relative;
+    z-index: 1;
+    font-size: 0.76rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    color: rgba(148, 163, 184, 0.8);
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.ato-live-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: atoBlink 0.8s ease-in-out infinite alternate;
+}
+
+/* ───────────────────────────────────────────────────────────────────
+   ANIMATION KEYFRAMES
+   ─────────────────────────────────────────────────────────────────── */
+@keyframes atoSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes atoSpinReverse {
+    from { transform: rotate(360deg); }
+    to { transform: rotate(0deg); }
+}
+
+@keyframes atoPulse {
+    from { transform: scale(0.9); opacity: 0.45; }
+    to { transform: scale(1.15); opacity: 0.9; }
+}
+
+@keyframes atoBadgePop {
+    0% { transform: scale(0.5); opacity: 0; }
+    70% { transform: scale(1.08); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes atoBlink {
+    from { opacity: 0.35; }
+    to { opacity: 1; }
+}

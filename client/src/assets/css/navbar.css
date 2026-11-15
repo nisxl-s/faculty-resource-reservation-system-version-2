@@ -1,0 +1,425 @@
+/* Navbar Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 2.2rem;
+    background-color: rgba(9, 16, 35, 0.62);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.08);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.navbar.scrolled {
+    padding: 0.4rem 2.2rem;
+}
+
+/* Nav Brand Group - Pairs USJ logo and titles cleanly on the left edge */
+.nav-brand-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 16px;
+    flex-shrink: 0;
+    text-align: left;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.nav-brand-group:hover {
+    text-decoration: none;
+    color: inherit;
+    opacity: 0.96;
+}
+
+.navbar img,
+.nav-brand-group img,
+.nav-logo-img {
+    width: 94px;
+    height: 94px;
+    object-fit: contain;
+    flex-shrink: 0;
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.navbar.scrolled img,
+.navbar.scrolled .nav-logo-img {
+    width: 78px;
+    height: 78px;
+}
+
+.logo,
+.nav-brand-group .logo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    line-height: 1.15;
+    text-align: left;
+    transition: all 0.3s ease;
+}
+
+.navbar .logo h3,
+.nav-brand-group .logo h3 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 750;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+    white-space: nowrap;
+    line-height: 1.16;
+    transition: font-size 0.3s ease;
+}
+
+.navbar .logo span,
+.nav-brand-group .logo span {
+    color: #faea09;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.25px;
+    margin: 0;
+    margin-top: 4px;
+    line-height: 1.2;
+    display: block;
+    text-shadow: 0 0 14px rgba(250, 234, 9, 0.35);
+    transition: font-size 0.3s ease;
+}
+
+.navbar.scrolled .logo h3 {
+    font-size: 22px;
+}
+
+.navbar.scrolled .logo span {
+    font-size: 13px;
+}
+
+@media screen and (max-width: 1150px) {
+    .navbar .logo h3,
+    .nav-brand-group .logo h3 {
+        font-size: 22px;
+    }
+    .navbar .logo span,
+    .nav-brand-group .logo span {
+        font-size: 13px;
+    }
+    .navbar img,
+    .nav-brand-group img,
+    .nav-logo-img {
+        width: 78px;
+        height: 78px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+    .nav-brand-group {
+        gap: 10px;
+    }
+    .navbar .logo h3,
+    .nav-brand-group .logo h3 {
+        font-size: 16px;
+    }
+    .navbar .logo span,
+    .nav-brand-group .logo span {
+        font-size: 10px;
+    }
+    .navbar img,
+    .nav-brand-group img,
+    .nav-logo-img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .navbar .logo h3,
+    .nav-brand-group .logo h3 {
+        font-size: 14px;
+        letter-spacing: -0.3px;
+    }
+    .navbar .logo span,
+    .nav-brand-group .logo span {
+        font-size: 9px;
+        letter-spacing: 0;
+    }
+}
+
+/* Navigation Links Glass Container */
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    position: relative;
+    background: rgba(12, 22, 45, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 5px 8px;
+    border-radius: 30px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.nav-links li {
+    margin: 0 0.2rem;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.nav-links a:not(.btn-primary):not(.btn-secondary):not(.login-btn) {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 600;
+    font-size: 0.92rem;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+    padding: 0.65rem 1.15rem;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 2;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.nav-links a:not(.btn-primary):not(.btn-secondary):not(.login-btn):hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    text-shadow: 0 0 10px rgba(250, 234, 9, 0.3);
+}
+
+.nav-links .btn-primary,
+.nav-links .btn-secondary {
+    padding: 0.6rem 1.6rem;
+    font-size: 0.95rem;
+    border-radius: 50px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.nav-links .btn-primary {
+    background: linear-gradient(135deg, #0e1144 0%, #1a4d8f 100%) !important;
+    color: #ffffff !important;
+    border: 2px solid #1a4d8f !important;
+    box-shadow: 0 4px 14px rgba(14, 17, 68, 0.4);
+}
+
+.nav-links .btn-primary:hover {
+    background: linear-gradient(135deg, #1a3d80 0%, #2e7bd6 100%) !important;
+    border-color: #3b82f6 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(30, 91, 168, 0.45);
+}
+
+.nav-links .btn-secondary {
+    background: transparent !important;
+    color: #ffffff !important;
+    border: 2px solid #faea09 !important;
+}
+
+.nav-links .btn-secondary:hover {
+    background: rgba(250, 234, 9, 0.12) !important;
+    color: #faea09 !important;
+    transform: translateY(-2px);
+}
+
+.nav-links a.active {
+    color: #faea09 !important;
+    font-weight: 600;
+    text-shadow: 0 0 14px rgba(250, 234, 9, 0.6);
+}
+
+/* Animated Glass Section Indicator */
+.nav-indicator {
+    position: absolute;
+    background: linear-gradient(135deg, rgba(250, 234, 9, 0.22) 0%, rgba(255, 255, 255, 0.12) 50%, rgba(250, 234, 9, 0.08) 100%);
+    border: 1.5px solid rgba(250, 234, 9, 0.55);
+    border-radius: 20px;
+    transition: left 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                top 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                height 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.22s ease;
+    z-index: 1;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.4),
+        0 0 18px rgba(250, 234, 9, 0.25),
+        inset 0 1px 1px rgba(255, 255, 255, 0.45);
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* floating class kept for backward compat but no scale lift */
+.nav-indicator.floating {
+    box-shadow: 
+        0 4px 20px rgba(0, 0, 0, 0.4),
+        0 0 18px rgba(250, 234, 9, 0.25),
+        inset 0 1px 1px rgba(255, 255, 255, 0.45);
+}
+
+/* Glowing bottom accent line on the glass indicator */
+.nav-indicator::after {
+    content: '';
+    position: absolute;
+    bottom: 3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 22px;
+    height: 3px;
+    border-radius: 999px;
+    background: #faea09;
+    box-shadow: 0 0 8px #faea09, 0 0 14px rgba(250, 234, 9, 0.9);
+}
+
+/* Clean, Seamless Section Entrance (Flicker-Free) */
+[data-section-content] {
+    animation: sectionFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes sectionFadeIn {
+    0% {
+        opacity: 0.85;
+        transform: translateY(4px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.section-shift-exit-forward,
+.section-shift-exit-backward,
+.section-shift-enter-forward,
+.section-shift-enter-backward {
+    animation: none !important;
+}
+
+.login-btn {
+    background: linear-gradient(135deg, #0e1144 0%, #1a4d8f 100%);
+    color: white !important;
+    padding: 0.6rem 1.6rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    border: 2px solid #1a4d8f;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(14, 17, 68, 0.4);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+    border-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4);
+}
+
+.burger {
+    display: none;
+    cursor: pointer;
+}
+
+.burger div {
+    width: 25px;
+    height: 3px;
+    background-color: var(--light-color);
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Mobile Navigation */
+@media screen and (max-width: 768px) {
+    .nav-links {
+        position: absolute;
+        right: 0;
+        top: 70px;
+        background-color: rgba(9, 16, 35, 0.96);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        padding: 1.5rem 0;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        transform: translateX(100%);
+        transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        border-radius: 0;
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-links.active {
+        transform: translateX(0);
+    }
+
+    .nav-links li {
+        margin: 0.5rem 0;
+        width: 85%;
+        justify-content: center;
+    }
+
+    .nav-links a:not(.btn-primary):not(.btn-secondary):not(.login-btn) {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-indicator {
+        display: none !important;
+    }
+
+    /* On mobile, active link displays the glass capsule directly */
+    .nav-links a.active {
+        background: linear-gradient(135deg, rgba(250, 234, 9, 0.2) 0%, rgba(255, 255, 255, 0.08) 100%);
+        border: 1px solid rgba(250, 234, 9, 0.45);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35), 0 0 14px rgba(250, 234, 9, 0.2);
+    }
+
+    .burger {
+        display: block;
+    }
+}
+
+/* Animation for burger menu */
+.toggle .line1 {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.toggle .line2 {
+    opacity: 0;
+}
+
+.toggle .line3 {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Logo shrink on scroll */
+.img-shrink-on-scroll {
+  transition: all 0.3s ease;
+}
+
+.img-shrink-on-scroll.shrink {
+  width: 50px;
+  height: 50px;
+}
+
+
+button.burger { background: transparent; border: 0; padding: 10px; }
+button.burger:focus-visible { outline: 3px solid #fbbf24; outline-offset: 3px; }

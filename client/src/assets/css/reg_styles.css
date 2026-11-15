@@ -1,0 +1,631 @@
+/* ═══════════════════════════════════════════════════════════════════
+   REG_STYLES.CSS  –  Registration page (navbar + form)
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Navbar ─────────────────────────────────────────────────────── */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 2.2rem;
+    background-color: rgba(9, 16, 35, 0.62);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.45), 0 1px 0 rgba(255, 255, 255, 0.08);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.navbar.scrolled {
+    padding: 0.4rem 2.2rem;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--light-color);
+    transition: all 0.3s ease;
+}
+
+.navbar.scrolled .logo { font-size: 1.5rem; }
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    position: relative;
+    background: transparent;
+    padding: 8px;
+    border-radius: 25px;
+}
+
+.nav-links li { margin-left: 0.5rem; position: relative; }
+
+.nav-links a {
+    color: var(--light-color);
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    padding: 0.7rem 1.2rem;
+    border-radius: 20px;
+    display: block;
+    position: relative;
+    z-index: 2;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+    text-shadow: 0 0 8px rgba(250, 234, 9, 0.3);
+}
+
+.nav-links a.active { color: var(--primary-color); font-weight: bold; }
+
+/* .nav-indicator is defined in navbar.css - do NOT re-define top/transform here */
+
+
+.login-btn {
+    background: linear-gradient(135deg, #0e1144 0%, #1a4d8f 100%);
+    color: white !important;
+    padding: 0.6rem 1.6rem;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    border: 2px solid #1a4d8f;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(14, 17, 68, 0.4);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+    border-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4);
+}
+
+.burger { display: none; cursor: pointer; }
+
+.burger div {
+    width: 25px;
+    height: 3px;
+    background-color: var(--light-color);
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+@media screen and (max-width: 768px) {
+    .nav-links {
+        position: absolute;
+        right: 0;
+        top: 70px;
+        background-color: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(15px);
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        padding: 1rem 0;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        transform: translateX(100%);
+        transition: transform 0.5s ease-in;
+        border-radius: 0;
+    }
+    .nav-links.active  { transform: translateX(0); }
+    .nav-links li      { margin: 0.5rem 0; }
+    .nav-indicator     { display: none; }
+    .burger            { display: block; }
+}
+
+.toggle .line1 { transform: rotate(-45deg) translate(-5px, 6px); }
+.toggle .line2 { opacity: 0; }
+.toggle .line3 { transform: rotate(45deg) translate(-5px, -6px); }
+
+/* ── Page layout ─────────────────────────────────────────────────── */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 130px 24px 50px;
+    box-sizing: border-box;
+}
+
+/* ── Card ────────────────────────────────────────────────────────── */
+.auth-formRegister {
+    width: 100%;
+    max-width: 860px;
+    margin: auto 0;
+    background: rgba(8, 14, 28, 0.82);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 0 0 1px rgba(26, 77, 143, 0.18),
+        0 24px 60px rgba(0, 0, 0, 0.6),
+        0 0 50px rgba(26, 77, 143, 0.12);
+    color: #fff;
+    overflow: visible;
+    animation: rg-slide-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Card Header section ─────────────────────────────────────────── */
+.rg-header {
+    padding: 28px 36px 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    background: linear-gradient(180deg, rgba(26, 77, 143, 0.2) 0%, transparent 100%);
+    border-radius: 24px 24px 0 0;
+}
+
+.rg-header-icon {
+    width: 54px;
+    height: 54px;
+    margin: 0 auto 14px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(26, 77, 143, 0.6), rgba(14, 17, 68, 0.8));
+    border: 1px solid rgba(250, 234, 9, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(26, 77, 143, 0.4), 0 0 0 1px rgba(250, 234, 9, 0.1);
+}
+
+.rg-header-icon svg {
+    width: 26px;
+    height: 26px;
+    stroke: #faea09;
+}
+
+.rg-header h1 {
+    font-size: 1.85rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin: 0 0 6px;
+    background: linear-gradient(135deg, #fff 30%, #93c5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.rg-subtitle {
+    font-size: 0.86rem;
+    color: rgba(148, 163, 184, 0.85);
+    margin: 0;
+    letter-spacing: 0.1px;
+}
+
+/* ── Form body: Dynamic Responsive Multi-Column Grid ────────────── */
+#registerForm {
+    padding: 24px 36px 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 16px;
+}
+
+/* ── Section Divider ─────────────────────────────────────────────── */
+.rg-section-divider {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+}
+
+.rg-section-divider span {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #93c5fd;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    white-space: nowrap;
+}
+
+.rg-section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(147, 197, 253, 0.22), transparent);
+}
+
+/* ── Form group ──────────────────────────────────────────────────── */
+.rg-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.rg-form-group label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #94a3b8;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+}
+
+.rg-form-group:focus-within label {
+    color: #faea09;
+}
+
+/* ── Input field with icon ───────────────────────────────────────── */
+.rg-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.rg-field-icon {
+    position: absolute;
+    left: 15px;
+    display: flex;
+    align-items: center;
+    pointer-events: none;
+    color: rgba(148, 163, 184, 0.6);
+    transition: color 0.2s;
+    z-index: 2;
+}
+
+.rg-field-icon svg {
+    width: 18px;
+    height: 18px;
+}
+
+.rg-field-input {
+    width: 100%;
+    padding: 12px 16px 12px 48px !important;
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #f1f5f9;
+    font-size: 0.92rem;
+    font-family: inherit;
+    outline: none;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+    caret-color: #faea09;
+}
+
+.rg-field-input::placeholder {
+    color: rgba(148, 163, 184, 0.45);
+}
+
+.rg-field-input:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.rg-field-input:focus {
+    background: rgba(250, 234, 9, 0.04);
+    border-color: rgba(250, 234, 9, 0.5);
+    box-shadow: 0 0 0 3px rgba(250, 234, 9, 0.1), 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.rg-field:focus-within .rg-field-icon {
+    color: #faea09;
+}
+
+/* ── Custom Select Dropdown ──────────────────────────────────────── */
+.rg-select {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
+/* Trigger button */
+.rg-select__trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 12px 16px 12px 48px !important;
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #f1f5f9;
+    font-size: 0.92rem;
+    font-family: inherit;
+    cursor: pointer;
+    position: relative;
+    text-align: left;
+    outline: none;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.rg-select__trigger:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Icon inside trigger – reuse rg-field-icon positioning */
+.rg-select__trigger .rg-field-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: rgba(148, 163, 184, 0.6);
+    transition: color 0.2s;
+}
+
+.rg-select--open .rg-select__trigger,
+.rg-select__trigger:focus {
+    background: rgba(250, 234, 9, 0.04);
+    border-color: rgba(250, 234, 9, 0.5);
+    box-shadow: 0 0 0 3px rgba(250, 234, 9, 0.1), 0 4px 14px rgba(0, 0, 0, 0.25);
+}
+
+.rg-select--open .rg-select__trigger .rg-field-icon {
+    color: #faea09;
+}
+
+.rg-select__trigger--placeholder {
+    color: rgba(148, 163, 184, 0.45);
+}
+
+.rg-select__label {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Chevron arrow */
+.rg-select__chevron {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    color: rgba(148, 163, 184, 0.55);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s;
+    pointer-events: none;
+}
+
+.rg-select__chevron svg { width: 16px; height: 16px; }
+
+.rg-select__chevron--up {
+    transform: translateY(-50%) rotate(180deg);
+    color: #faea09;
+}
+
+/* Dropdown menu panel */
+.rg-select__menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: rgba(10, 18, 38, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(250, 234, 9, 0.2);
+    border-radius: 14px;
+    overflow: hidden;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    z-index: 9999;
+    box-shadow:
+        0 20px 50px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(255, 255, 255, 0.05);
+    animation: rg-menu-in 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes rg-menu-in {
+    from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* Option row */
+.rg-select__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    color: #cbd5e1;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+}
+
+.rg-select__option:hover {
+    background: rgba(250, 234, 9, 0.08);
+    color: #faea09;
+}
+
+/* Active/selected option */
+.rg-select__option--active {
+    background: rgba(250, 234, 9, 0.1);
+    color: #faea09;
+    font-weight: 600;
+}
+
+/* Colored dot decoration */
+.rg-select__option-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(148, 163, 184, 0.4);
+    flex-shrink: 0;
+    transition: background 0.15s;
+}
+
+.rg-select__option:hover .rg-select__option-dot,
+.rg-select__option--active .rg-select__option-dot {
+    background: #faea09;
+}
+
+/* Checkmark */
+.rg-select__check {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    color: #faea09;
+}
+
+.rg-select__check svg { width: 14px; height: 14px; }
+
+/* ── Submit Button ───────────────────────────────────────────────── */
+.rg-btn-submit {
+    grid-column: 1 / -1;
+    width: 100%;
+    margin: 8px 0 0;
+    padding: 13px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #0e1144 0%, #1e5ba8 100%);
+    color: #fff;
+    border: 1.5px solid rgba(59, 130, 246, 0.6);
+    border-radius: 14px;
+    font-size: 0.97rem;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    transition: background 0.25s, transform 0.2s, box-shadow 0.25s, border-color 0.2s;
+    box-shadow: 0 4px 20px rgba(14, 17, 68, 0.5), inset 0 1px 0 rgba(255,255,255,0.08);
+    position: relative;
+    overflow: hidden;
+}
+
+.rg-btn-submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(250, 234, 9, 0.08) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.rg-btn-submit:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1a3d80 0%, #2e7bd6 100%);
+    border-color: rgba(59, 130, 246, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(30, 91, 168, 0.55), 0 0 0 1px rgba(59,130,246,0.3);
+}
+
+.rg-btn-submit:hover::before { opacity: 1; }
+
+.rg-btn-submit:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(14, 17, 68, 0.4);
+}
+
+.rg-btn-submit:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* Loading spinner */
+.rg-spinner {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,0.25);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: rg-spin 0.7s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes rg-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Footer link ─────────────────────────────────────────────────── */
+.auth-footer {
+    padding: 18px 28px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: 6px;
+}
+
+.auth-footer p {
+    font-size: 0.83rem;
+    color: rgba(148, 163, 184, 0.75);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.auth-footer a {
+    color: #faea09;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.83rem;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+
+.auth-footer a:hover {
+    color: #fef08a;
+    text-shadow: 0 0 10px rgba(250, 234, 9, 0.5);
+}
+
+/* ── Page animation ──────────────────────────────────────────────── */
+@keyframes rg-slide-in {
+    from { opacity: 0; transform: translateY(18px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ── Page footer ─────────────────────────────────────────────────── */
+footer {
+    margin-top: 10px;
+    color: #faf9f68b;
+    font-size: 14px;
+    font-weight: 400;
+    text-align: center;
+    padding: 10px;
+    border-top: 1px solid rgba(250, 249, 246, 0.1);
+    background-color: transparent;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .auth-formRegister {
+        max-width: 540px;
+    }
+    #registerForm {
+        grid-template-columns: 1fr;
+        padding: 20px 24px 0;
+        gap: 14px;
+    }
+    .rg-header {
+        padding: 24px 24px 18px;
+    }
+    .rg-btn-submit {
+        grid-column: 1;
+    }
+}
+
+@media (max-width: 520px) {
+    .auth-formRegister {
+        border-radius: 20px;
+        max-width: 100%;
+    }
+    .rg-header {
+        padding: 20px 18px 16px;
+        border-radius: 20px 20px 0 0;
+    }
+    #registerForm {
+        padding: 16px 18px 0;
+        gap: 12px;
+    }
+    .rg-header h1 {
+        font-size: 1.45rem;
+    }
+    .auth-footer {
+        padding: 14px 18px 20px;
+    }
+}

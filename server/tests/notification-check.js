@@ -1,0 +1,21 @@
+const assert=require('node:assert/strict');
+module.exports=async function({request,connection,admin,student,faculty,users}){
+  const created=await request('/notifications',admin,'POST',{user_id:users.student,title:'Member unread fixture',message:'Private to the member'});assert.equal(created.status,201);const memberId=created.body.data.id;
+  const other=await request('/notifications',admin,'POST',{user_id:users.faculty,title:'Faculty unread fixture',message:'Private to faculty'});assert.equal(other.status,201);
+  assert.equal((await request('/notifications/read-all',null,'PATCH')).status,401);
+  assert.equal((await request('/notifications/all',student)).status,403);
+  assert.equal((await request('/notifications/read-all',admin,'PATCH')).status,200);
+  assert.ok((await request('/notifications/all',admin)).body.data.notifications.every(n=>Number(n.is_read)===1),'admin read state persists across a fresh fetch of the entire audit view');
+  let member=(await request('/notifications',student)).body.data.notifications;
+  assert.equal(Number(member.find(n=>n.notification_id===memberId).is_read),0,'admin cannot mark the member inbox as read');
+  const [[record]]=await connection.query('SELECT is_read FROM notifications WHERE id=?',[memberId]);assert.equal(Number(record.is_read),0);
+  assert.equal((await request('/notifications/'+other.body.data.id+'/read',student,'PATCH')).status,404,'member cannot mark another user private notification');
+  assert.equal((await request('/notifications/2147483647/read',admin,'PATCH')).status,404);
+  assert.equal((await request('/notifications/read-all',student,'PATCH')).status,200);
+  member=(await request('/notifications',student)).body.data.notifications;
+  assert.ok(member.every(n=>Number(n.is_read)===1),'member read state persists across a fresh fetch');
+  assert.equal(Number((await request('/notifications',faculty)).body.data.notifications.find(n=>n.notification_id===other.body.data.id).is_read),0,'one member cannot change another inbox');
+  assert.equal((await request('/notifications/'+other.body.data.id+'/read',faculty,'PATCH')).status,200);
+  assert.equal(Number((await request('/notifications',faculty)).body.data.notifications.find(n=>n.notification_id===other.body.data.id).is_read),1,'single notification read also persists');
+  assert.equal((await request('/notifications/read-all',student,'PATCH')).status,200,'repeated bulk reads are idempotent');
+};

@@ -1,0 +1,194 @@
+/* ====================
+   General & Typography
+   ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ====================
+   Header & Nav
+   ==================== */
+
+/* ====================
+   Hero Banner
+   ==================== */
+.hero-banner {
+  background: linear-gradient(to right, #004080, #007acc);
+  margin-top: 120px;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+/* ====================
+   Help Section Boxes
+   ==================== */
+.help-section, .feedback-page, .legal-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.help-box {
+  margin-top: 40px;
+  padding: 30px;
+  background: #eef7ed;
+  border-left: 5px solid green;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+}
+.help-box:hover {
+  transform: translateY(-2px);
+}
+.help-box h2 {
+  color: #1d6f42;
+  margin-bottom: 10px;
+}
+.help-box ol, .help-box ul, .help-box p {
+  margin-left: 15px;
+  margin-top: 10px;
+}
+.feedback-btn{
+  padding: 4px;
+  margin-top: 30px;
+  background-color: rgb(16, 128, 36);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* ====================
+   FAQ
+   ==================== */
+.faq-question {
+  width: 100%;
+  background: #e0ecf7;
+  border: none;
+  padding: 12px;
+  font-weight: bold;
+  text-align: left;
+  cursor: pointer;
+}
+.faq-answer {
+  display: none;
+  padding: 10px 15px;
+  background: #f9f9f9;
+  border-left: 4px solid #007acc;
+}
+
+/* ====================
+   Feedback Form
+   ==================== */
+.feedback-page h1{
+  color: white;
+}
+   .feedback-box {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 25px;
+  border-radius: 16px;
+  background: rgba(8, 14, 28, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  color: #fff;
+}
+.feedback-box:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 20px rgba(250, 234, 9, 0.15);
+  border-color: rgba(250, 234, 9, 0.4);
+}
+
+.feedback-box label {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+}
+
+.feedback-box input,
+.feedback-box textarea {
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.055);
+  color: #f1f5f9;
+  width: 100%;
+  outline: none;
+  transition: all 0.25s ease;
+  caret-color: #faea09;
+}
+
+.feedback-box input:focus,
+.feedback-box textarea:focus {
+  background: rgba(250, 234, 9, 0.04);
+  border-color: rgba(250, 234, 9, 0.55);
+  box-shadow: 0 0 0 3px rgba(250, 234, 9, 0.12), 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.feedback-box button {
+  padding: 13px 20px;
+  background: linear-gradient(135deg, #0e1144 0%, #1a4d8f 100%);
+  color: white;
+  border: 1.5px solid #1a4d8f;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.feedback-box button:hover {
+  background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+  border-color: #3498db;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4);
+}
+
+
+.terms-links a {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+  margin: 0 10px;
+}
+.terms-links a:hover {
+  text-decoration: underline;
+}
+
+/* ====================
+   Responsive Design
+   ==================== */
+@media screen and (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+  .help-section, .feedback-page, .legal-page {
+    padding: 10px;
+  }
+  .feedback-btn, .feedback-box button {
+    width: 100%;
+  }
+}
+
