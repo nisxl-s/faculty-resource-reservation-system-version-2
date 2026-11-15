@@ -1,0 +1,22 @@
+.review-page { max-width: 1050px; margin: 130px auto 70px; padding: 24px; color: #f1f5f9; }
+.review-page h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); margin-bottom: 16px; }
+.review-page p { line-height: 1.65; overflow-wrap: anywhere; }
+.review-page label { display: block; margin: 14px 0 8px; font-weight: 600; }
+.review-page select, .review-page textarea { border: 1px solid #64748b; border-radius: 8px; padding: 10px 12px; color: #f8fafc; background: #14213b; max-width: 100%; font: inherit; }
+.review-page textarea { display: block; width: 100%; min-height: 110px; box-sizing: border-box; }
+.review-page button { cursor: pointer; border: 1px solid #93c5fd; border-radius: 8px; background: #1d4ed8; color: white; padding: 10px 16px; font: inherit; margin: 8px 8px 8px 0; }
+.review-page button:disabled { opacity: .55; cursor: not-allowed; }
+.review-page :is(button, select, textarea, a):focus-visible { outline: 3px solid #fbbf24; outline-offset: 4px; }
+.review-card { padding: 22px; margin: 20px 0; background: rgba(10, 23, 46, .94); border: 1px solid #526681; border-radius: 16px; }
+.review-card h2 { font-size: 1.25rem; margin-bottom: 12px; }
+.review-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.review-error { padding: 14px; color: #fee2e2; background: #7f1d1d; border-radius: 8px; }
+@media (max-width: 600px) { .review-page { padding: 16px; margin-top: 110px; } .review-card { padding: 16px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+
+.support-inbox.review-page { margin: 0; padding: 0; width: 100%; min-width: 0; }
+.support-panel-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.support-panel-tabs button { background: #14213b; color: #f8fafc; border: 1px solid #64748b; padding: 10px 14px; border-radius: 10px; cursor: pointer; }
+.support-panel-tabs button[aria-pressed="true"] { background: #1d4ed8; border-color: #93c5fd; }
+.support-panel-tabs button:focus-visible { outline: 3px solid #fbbf24; outline-offset: 3px; }
+.support-inbox .review-card { padding: 16px; }

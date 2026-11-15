@@ -1,0 +1,242 @@
+/* Global Styles */
+:root {
+    --navbar-height: 70px;
+    --primary-color: #faea09;
+    --secondary-color: #2c3e50;
+    --accent-color: #e74c3c;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+    --success-color: #2ecc71;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+    --gray-color: #95a5a6;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+    height: 100%;
+    background-color: #000b1f;
+}
+
+body {
+    background: transparent;
+    color: #f5f5f5;
+    line-height: 1.6;
+    margin: 0; 
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+#root {
+    background: transparent;
+    min-height: 100vh;
+    position: relative;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+}
+
+.btn-primary {
+    display: inline-block;
+    background: linear-gradient(135deg, #0e1144 0%, #1a4d8f 100%);
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    border: 2px solid #1a4d8f;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 14px rgba(14, 17, 68, 0.4);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+    border-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(41, 128, 185, 0.4);
+}
+
+.btn-secondary {
+    display: inline-block;
+    background: transparent;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 50px;
+    border: 2px solid #faea09;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background: #faea09;
+    color: #0a0a0a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(250, 234, 9, 0.4);
+}
+
+ins {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+
+/* Loading Spinner Animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Performance optimizations */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Utility classes */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mt-4 {
+    margin-top: 2rem;
+}
+
+.mb-4 {
+    margin-bottom: 2rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   UNIFIED FORM CONTROLS & FILLING AREAS (Glassmorphism Design System)
+   ═══════════════════════════════════════════════════════════════════ */
+
+:where(input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="search"],
+input[type="url"],
+textarea,
+select) {
+    font-family: inherit;
+    color: #f1f5f9;
+    background: rgba(255, 255, 255, 0.055);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    caret-color: #faea09;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: rgba(148, 163, 184, 0.45);
+}
+
+input:hover,
+textarea:hover,
+select:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    background: rgba(250, 234, 9, 0.04);
+    border-color: rgba(250, 234, 9, 0.55);
+    box-shadow: 0 0 0 3px rgba(250, 234, 9, 0.12), 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Custom styled select dropdowns with gold chevron */
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23faea09' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px 16px;
+    padding-right: 42px;
+    cursor: pointer;
+}
+
+select option {
+    background: #0d1527;
+    color: #f1f5f9;
+    padding: 10px 14px;
+}
+
+/* Accent color for checkboxes and radios */
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: #faea09;
+}
+
+/* Hardware-accelerated smooth entrance preserving backdrop blur */
+@keyframes tileSmoothEntrance {
+    from {
+        opacity: 0;
+        transform: translateZ(0);
+    }
+    to {
+        opacity: 1;
+        transform: translateZ(0);
+    }
+}
+
+/* ── Global Browser Autofill Dark Override ────────────────────────── */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #0d1527 inset !important;
+    box-shadow: 0 0 0 1000px #0d1527 inset !important;
+    -webkit-text-fill-color: #f1f5f9 !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(250, 234, 9, 0.4) !important;
+    transition: background-color 5000s ease-in-out 0s;
+    caret-color: #faea09 !important;
+}

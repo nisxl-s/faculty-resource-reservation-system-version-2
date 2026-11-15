@@ -1,0 +1,34 @@
+.decision-history{width:260px;max-width:100%;margin-top:10px;color:#e2e8f0;white-space:normal;text-align:left}
+.decision-history__trigger{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid #faea092e;border-radius:10px;background:#faea0909;color:#d8deeb;font-size:.75rem;font-weight:600;line-height:1.4;cursor:pointer;list-style:none;transition:border-color .18s,background .18s}
+.decision-history__trigger::-webkit-details-marker{display:none}
+.decision-history__trigger:hover,.decision-history[open]>.decision-history__trigger{background:#faea0912;border-color:#faea0961;color:#faea09}
+.decision-history__trigger:focus-visible,.decision-history__empty button:focus-visible{outline:2px solid #faea09;outline-offset:3px}
+.decision-history__trigger>svg:first-child{color:#faea09;flex-shrink:0}
+.decision-history__chevron{margin-left:auto;color:#94a3b8;transition:transform .18s}
+.decision-history[open] .decision-history__chevron{transform:rotate(180deg);color:#faea09}
+.decision-history__trigger b{display:grid;place-items:center;min-width:18px;height:18px;border-radius:5px;background:#faea091a;color:#faea09;font-size:.65rem}
+.decision-history__panel{margin-top:7px;padding:15px 14px;background:linear-gradient(145deg,#111f39f5,#071022f7);border:1px solid #94a3b833;border-radius:12px;box-shadow:0 8px 24px #0003,inset 0 1px #ffffff09;overflow-wrap:anywhere}
+.decision-history__heading{display:flex;justify-content:space-between;gap:8px;padding-bottom:12px;border-bottom:1px solid #94a3b81f;color:#8294b0;font-size:.56rem;font-weight:700;letter-spacing:.1em}
+.decision-history__heading>span:last-child{color:#faea09;letter-spacing:.02em}
+.decision-history__empty{display:flex;flex-direction:column;align-items:center;gap:9px;padding:23px 5px 13px;text-align:center}
+.decision-history__empty-icon{display:grid;place-items:center;width:46px;height:46px;margin-bottom:2px;color:#faea09;border:1px solid #faea092e;border-radius:14px;background:radial-gradient(ellipse at top,#faea0917,#1a4d8f1f)}
+.decision-history .decision-history__empty h4{margin:0;font-size:.8rem;font-weight:600;color:#dfe7f5}
+.decision-history .decision-history__empty p{margin:0;font-size:.7rem;line-height:1.65;color:#8fa1bb}
+.decision-history__timeline{list-style:none;margin:15px 0 0;padding:0;max-height:360px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#394c69 transparent}
+.decision-history__event{--history-tone:#fbbf24;position:relative;margin:0 0 0 4px;padding:0 0 22px 19px;border-left:1px solid #94a3b833}
+.decision-history__event:last-child{padding-bottom:0;border-left-color:transparent}
+.decision-history__event[data-state="approved"]{--history-tone:#4ade80}
+.decision-history__event[data-state="rejected"]{--history-tone:#fb7185}
+.decision-history__event[data-state="cancelled"]{--history-tone:#94a3b8}
+.decision-history__dot{position:absolute;top:4px;left:-4px;width:7px;height:7px;border-radius:50%;background:var(--history-tone);box-shadow:0 0 0 3px #101d34}
+.decision-history .decision-history__event h4{margin:0 0 7px;color:#e2e8f0;font-size:.75rem;line-height:1.5;font-weight:600}
+.decision-history__transition{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:9px;font-size:.63rem;color:#8496b0}
+.decision-history__status{color:var(--history-tone);border:1px solid currentColor;border-radius:5px;padding:1px 6px;font-size:.6rem;font-weight:600}
+.decision-history__meta{display:flex;align-items:flex-start;gap:5px;color:#8fa1bb;font-size:.61rem;line-height:1.6;margin-top:3px}
+.decision-history__meta svg{flex-shrink:0;margin-top:2px}
+.decision-history__note{margin-top:10px;padding:9px 10px;background:#0000002b;border:1px solid #94a3b81f;border-radius:7px}
+.decision-history__note>span{display:flex;align-items:center;gap:5px;color:#9caec6;font-size:.58rem;font-weight:600}
+.decision-history .decision-history__note p{margin:5px 0 0;font-size:.69rem;line-height:1.6;color:#d2dbea;white-space:pre-wrap}
+.decision-history__loading{padding:24px 0 12px;text-align:center;font-size:.7rem;color:#9aabc4}
+.decision-history__empty button{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;background:#faea0912;border:1px solid #faea0940;border-radius:7px;color:#faea09;font-size:.69rem;cursor:pointer}
+@media(prefers-reduced-motion:reduce){.decision-history__trigger,.decision-history__chevron{transition:none}}
