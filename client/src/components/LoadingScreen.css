@@ -1,0 +1,264 @@
+/* src/components/LoadingScreen.css */
+.ls-root {
+  --bg-1: #000b1f;
+  --bg-2: #09132c;
+  --accent: #00c4ff;
+  --accent-2: #274fff;
+  --text: #e8ecff;
+  --muted: #8f9bc9;
+
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: transparent;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.ls-root.ls-exit {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
+}
+
+/* floating background orbs */
+.ls-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.25;
+  animation: ls-float 14s ease-in-out infinite;
+  pointer-events: none;
+}
+.ls-orb-1 { width: 340px; height: 340px; background: #274fff;   top: -80px;   left: -60px; }
+.ls-orb-2 { width: 300px; height: 300px; background: #00a8ff; bottom: -90px; right: -40px; animation-delay: -5s; }
+.ls-orb-3 { width: 220px; height: 220px; background: #00c4ff;   top: 55%;     left: 60%;    animation-delay: -9s; }
+
+@keyframes ls-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(40px, -30px) scale(1.1); }
+  66%      { transform: translate(-30px, 40px) scale(0.95); }
+}
+
+/* glass card */
+.ls-card {
+  position: relative;
+  width: min(390px, 88vw);
+  padding: 36px 32px 30px;
+  border-radius: 24px;
+  text-align: center;
+  background: rgba(9, 16, 35, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  animation: ls-rise 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes ls-rise {
+  from { opacity: 0; transform: translateY(24px) scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* reservation slot grid */
+.ls-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 200px;
+  margin: 0 auto 28px;
+}
+
+.ls-slot {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: ls-wave 2.4s ease-in-out infinite;
+  animation-delay: calc(var(--i) * 0.12s);
+}
+
+@keyframes ls-wave {
+  0%, 100% {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1);
+    box-shadow: none;
+  }
+  40% {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    transform: scale(1.12);
+    box-shadow: 0 0 22px rgba(0, 196, 255, 0.55);
+  }
+  70% {
+    background: rgba(255, 255, 255, 0.08);
+    transform: scale(1);
+  }
+}
+
+/* the "booked" slot */
+.ls-booked {
+  display: grid;
+  place-items: center;
+  animation: ls-book 2.4s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+@keyframes ls-book {
+  0%, 25%  { background: rgba(255, 255, 255, 0.08); transform: scale(1); box-shadow: none; }
+  45%, 85% {
+    background: linear-gradient(135deg, var(--accent-2), var(--accent));
+    transform: scale(1.15);
+    box-shadow: 0 0 26px rgba(0, 196, 255, 0.7);
+  }
+  100%     { background: rgba(255, 255, 255, 0.08); transform: scale(1); box-shadow: none; }
+}
+
+.ls-check {
+  width: 70%;
+  height: 70%;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: ls-draw 2.4s ease-in-out infinite;
+}
+
+@keyframes ls-draw {
+  0%, 35%  { stroke-dashoffset: 24; }
+  55%, 85% { stroke-dashoffset: 0; }
+  100%     { stroke-dashoffset: 24; }
+}
+
+/* text */
+.ls-title {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: linear-gradient(90deg, #fff, var(--accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ls-message {
+  height: 1.4em;
+  margin: 0 0 22px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  animation: ls-fade 1.6s ease both;
+}
+
+@keyframes ls-fade {
+  0%       { opacity: 0; transform: translateY(6px); }
+  15%, 85% { opacity: 1; transform: none; }
+  100%     { opacity: 0; transform: translateY(-6px); }
+}
+
+.ls-dots i {
+  display: inline-block;
+  width: 3px;
+  height: 3px;
+  margin-left: 3px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: ls-blink 1.2s infinite;
+}
+.ls-dots i:nth-child(2) { animation-delay: 0.2s; }
+.ls-dots i:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes ls-blink {
+  0%, 80%, 100% { opacity: 0.2; }
+  40%           { opacity: 1; }
+}
+
+/* progress bar */
+.ls-bar {
+  height: 6px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.ls-bar-fill {
+  position: relative;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: width 0.3s ease-out;
+}
+
+.ls-bar-fill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-100%);
+  animation: ls-shimmer 1.4s infinite;
+}
+
+@keyframes ls-shimmer {
+  to { transform: translateX(100%); }
+}
+
+.ls-percent {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+
+/* error screen */
+.ls-error-text {
+  margin: 0 0 22px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--muted);
+  word-break: break-word;
+}
+
+.ls-btn {
+  padding: 10px 22px;
+  border: 0;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 600;
+  color: #000b1f;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.ls-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 196, 255, 0.4);
+}
+
+/* accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .ls-orb,
+  .ls-slot,
+  .ls-booked,
+  .ls-check,
+  .ls-card,
+  .ls-message,
+  .ls-bar-fill::after,
+  .ls-dots i {
+    animation: none;
+  }
+  .ls-booked { background: var(--accent-2); }
+  .ls-check  { stroke-dashoffset: 0; }
+}
+
+/* Unknown-duration page requests show activity, not fabricated completion percentages. */
+.ls-bar-fill--indeterminate{width:35%;animation:ls-indeterminate 1.2s ease-in-out infinite;}
+@keyframes ls-indeterminate{0%{transform:translateX(-110%)}100%{transform:translateX(390%)}}
+@media(prefers-reduced-motion:reduce){.ls-bar-fill--indeterminate{animation:none;transform:none;width:100%;opacity:.5;}}

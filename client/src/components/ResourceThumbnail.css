@@ -1,0 +1,182 @@
+/* ==========================================================================
+   ResourceThumbnail Component Styling
+   Supports both uploaded photos & bespoke default vector thumbnail designs
+   ========================================================================== */
+
+.rt-container {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+/* Sizing Modifiers */
+.rt-container--sm {
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
+  min-height: 52px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rt-container--md {
+  width: 100%;
+  height: 165px;
+  min-height: 165px;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.rt-container--lg {
+  width: 100%;
+  height: 260px;
+  min-height: 260px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+/* Clickable state */
+.rt-container--clickable {
+  cursor: pointer;
+}
+
+.rt-container--clickable:hover {
+  filter: brightness(1.07);
+}
+
+.rt-container--clickable:hover .rt-image {
+  transform: scale(1.04);
+}
+
+/* Actual Photo Image */
+.rt-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Multi-photo count badge */
+.rt-photo-count-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(10, 15, 29, 0.82);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(250, 234, 9, 0.4);
+  color: #faea09;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  padding: 3px 8px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 2;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  pointer-events: none;
+}
+
+/* Default Vector Thumbnail Designs (When no photos are uploaded) */
+.rt-container--default.rt-container--classroom {
+  background: radial-gradient(circle at 50% 25%, rgba(37, 99, 235, 0.38) 0%, rgba(15, 23, 42, 0.95) 75%);
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+.rt-container--default.rt-container--lab {
+  background: radial-gradient(circle at 50% 25%, rgba(16, 185, 129, 0.38) 0%, rgba(15, 23, 42, 0.95) 75%);
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.rt-container--default.rt-container--hall {
+  background: radial-gradient(circle at 50% 25%, rgba(139, 92, 246, 0.38) 0%, rgba(15, 23, 42, 0.95) 75%);
+  border-color: rgba(139, 92, 246, 0.25);
+}
+
+.rt-container--default.rt-container--equipment {
+  background: radial-gradient(circle at 50% 25%, rgba(245, 158, 11, 0.38) 0%, rgba(15, 23, 42, 0.95) 75%);
+  border-color: rgba(245, 158, 11, 0.25);
+}
+
+.rt-container--default.rt-container--other {
+  background: radial-gradient(circle at 50% 25%, rgba(56, 189, 248, 0.32) 0%, rgba(15, 23, 42, 0.95) 75%);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.rt-default-design {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.rt-default-graphic-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rt-default-svg {
+  width: 100%;
+  height: 100%;
+  max-height: 115px;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45));
+}
+
+.rt-container--sm .rt-default-svg {
+  max-height: 38px;
+}
+
+.rt-container--lg .rt-default-svg {
+  max-height: 180px;
+}
+
+.rt-default-meta {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+}
+
+.rt-default-type-tag {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(6px);
+}
+
+.rt-default-indicator {
+  font-size: 10px;
+  color: #faea09;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  opacity: 0.9;
+}

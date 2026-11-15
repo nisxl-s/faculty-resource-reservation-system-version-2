@@ -1,0 +1,91 @@
+/* Support uses the same navy glass, gold accents and controls as Reservations. */
+.floating-help-modal { width: min(940px, calc(100vw - 48px)); max-width: 940px; height: min(88dvh, 920px); max-height: min(88dvh, 920px); background: rgba(8,14,28,.96); border: 1px solid rgba(255,255,255,.14); border-radius: 24px; box-shadow: 0 0 0 1px rgba(26,77,143,.18),0 24px 60px rgba(0,0,0,.6),0 0 50px rgba(26,77,143,.15); color: #f1f5f9; }
+.floating-help-modal, .floating-help-modal * { box-sizing: border-box; }
+.floating-help-modal .help-modal-header { padding: 24px 30px; background: linear-gradient(180deg,rgba(26,77,143,.24),transparent); border-bottom: 1px solid rgba(255,255,255,.08); flex-shrink: 0; gap: 16px; }
+.floating-help-modal .help-header-content { gap: 16px; min-width: 0; }
+.support-brand-icon { display: grid; place-items: center; width: 56px; height: 56px; flex-shrink: 0; border-radius: 16px; background: linear-gradient(135deg,rgba(26,77,143,.55),rgba(14,17,68,.8)); border: 1px solid rgba(250,234,9,.3); box-shadow: 0 6px 18px rgba(26,77,143,.3); }
+.floating-help-modal .support-brand-icon svg { color: #faea09; }
+.support-eyebrow { display: block; color: #94a3b8; font-size: .65rem; font-weight: 700; letter-spacing: .16em; margin-bottom: 5px; }
+.floating-help-modal .help-header-content h2 { color: #faea09; font-size: clamp(1.25rem,3vw,1.65rem); font-weight: 700; letter-spacing: -.4px; margin: 0 0 5px; }
+.floating-help-modal .help-header-content p { font-size: .85rem; color: #94a3b8; line-height: 1.5; }
+.floating-help-modal .help-close-btn { width: 36px; height: 36px; padding: 8px; border: 1px solid rgba(255,255,255,.12); border-radius: 10px; background: rgba(255,255,255,.04); color: #cbd5e1; flex-shrink: 0; }
+.floating-help-modal .help-close-btn:hover { color: #faea09; border-color: rgba(250,234,9,.4); background: rgba(250,234,9,.06); }
+.floating-help-modal .help-modal-body { padding: 24px 30px 30px; min-height: 0; flex: 1 1 0; overflow-y: auto; scrollbar-gutter: stable; scrollbar-width: thin; scrollbar-color: rgba(250,234,9,.3) transparent; }
+.floating-help-modal .support-panel-tabs { display: flex; gap: 6px; padding: 6px; margin: 0 0 26px; border: 1px solid rgba(255,255,255,.09); background: rgba(255,255,255,.025); border-radius: 14px; }
+.floating-help-modal .support-panel-tabs button { flex: 1; display: flex; justify-content: center; align-items: center; gap: 8px; margin: 0; padding: 11px 14px; font: inherit; font-size: .82rem; font-weight: 600; color: #94a3b8; border: 1px solid transparent; border-radius: 10px; background: transparent; }
+.floating-help-modal .support-panel-tabs button:hover { background: rgba(255,255,255,.05); color: #f1f5f9; }
+.floating-help-modal .support-panel-tabs button[aria-pressed="true"] { color: #faea09; background: rgba(250,234,9,.08); border-color: rgba(250,234,9,.25); box-shadow: 0 2px 10px rgba(0,0,0,.2); }
+.floating-help-modal .help-section { margin: 0 0 28px; }
+.floating-help-modal .help-section:last-child { margin-bottom: 0; }
+.floating-help-modal .help-section-title { display: flex; align-items: center; gap: 12px; color: #e2e8f0; font-size: .95rem; font-weight: 650; padding: 0; margin: 0 0 16px; border: 0; letter-spacing: -.15px; }
+.floating-help-modal .help-section-title::before { content: ''; width: 3px; height: 16px; background: #faea09; border-radius: 2px; }
+.floating-help-modal .help-quick-links { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.floating-help-modal .help-quick-link-item { flex-direction: row; justify-content: flex-start; gap: 12px; padding: 14px 16px; background: rgba(255,255,255,.035); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; transition: background .18s,border-color .18s; }
+.floating-help-modal .help-quick-link-item:hover { transform: none; background: rgba(26,77,143,.18); border-color: rgba(250,234,9,.3); box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+.floating-help-modal .help-quick-link-icon { width: 38px; height: 38px; border-radius: 10px; color: #faea09; background: rgba(26,77,143,.23); border: 1px solid rgba(26,77,143,.35); flex-shrink: 0; }
+.floating-help-modal .help-quick-link-icon svg { width: 18px; height: 18px; }
+.floating-help-modal .help-quick-link-item span { color: #e2e8f0; text-align: left; font-size: .86rem; }
+.support-link-arrow { color: #64748b; margin-left: auto; flex-shrink: 0; }
+.floating-help-modal .help-search-container { position: relative; margin-bottom: 12px; }
+.floating-help-modal .help-search-container > svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #64748b; pointer-events: none; }
+.floating-help-modal .help-search-input { padding: 12px 16px 12px 42px; font: inherit; font-size: .85rem; background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.12); }
+.floating-help-modal .help-faq-list { gap: 8px; }
+.floating-help-modal .help-faq-item { background: rgba(255,255,255,.025); border-color: rgba(255,255,255,.09); border-radius: 12px; }
+.floating-help-modal .help-faq-item.active { border-color: rgba(250,234,9,.3); background: rgba(250,234,9,.025); }
+.floating-help-modal .help-faq-question { padding: 16px; gap: 16px; font-size: .86rem; font-weight: 550; line-height: 1.5; color: #e2e8f0; }
+.floating-help-modal .help-faq-question svg { color: #94a3b8; width: 17px; height: 17px; }
+.floating-help-modal .help-faq-item.active .help-faq-question svg { color: #faea09; }
+.floating-help-modal .help-faq-answer { padding: 0 16px 18px; font-size: .85rem; color: #94a3b8; line-height: 1.8; }
+.floating-help-modal .help-contact-intro { text-align: left; font-size: .85rem; margin: -4px 0 16px; color: #94a3b8; }
+.floating-help-modal .help-contact-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.floating-help-modal .help-contact-card { display: grid; grid-template-columns: 38px minmax(0,1fr); column-gap: 12px; text-align: left; padding: 16px; background: rgba(255,255,255,.025); border-color: rgba(255,255,255,.09); border-radius: 14px; }
+.floating-help-modal .help-contact-card:hover { transform: none; box-shadow: none; border-color: rgba(255,255,255,.16); }
+.floating-help-modal .help-contact-icon { grid-row: span 3; width: 38px; height: 38px; margin: 0; background: rgba(26,77,143,.2); color: #faea09; border-radius: 10px; }
+.floating-help-modal .help-contact-icon svg { width: 18px; height: 18px; }
+.floating-help-modal .help-contact-card h4 { font-size: .78rem; color: #94a3b8; font-weight: 500; margin: 0 0 4px; }
+.floating-help-modal .help-contact-value { color: #e2e8f0; font-size: .85rem; overflow-wrap: anywhere; }
+.floating-help-modal .help-contact-note { color: #64748b; font-size: .75rem; margin-top: 3px; }
+.floating-help-modal .help-submit-request-btn-container { padding: 0; margin: 0 0 26px; }
+.floating-help-modal :is(.help-submit-request-btn,.help-form-submit-btn) { background: rgba(250,234,9,.07); border: 1px solid rgba(250,234,9,.3); color: #faea09; border-radius: 12px; font-size: .85rem; box-shadow: 0 4px 14px rgba(0,0,0,.2); }
+.floating-help-modal :is(.help-submit-request-btn,.help-form-submit-btn):hover:not(:disabled) { background: rgba(250,234,9,.12); border-color: rgba(250,234,9,.6); transform: none; box-shadow: 0 6px 20px rgba(0,0,0,.2); }
+.floating-help-modal .help-request-form-section { padding: 0 !important; }
+.floating-help-modal .help-form-group label { color: #cbd5e1; font-size: .82rem; }
+.floating-help-modal .help-form-group :is(input,textarea) { font-size: .86rem; background: rgba(255,255,255,.04); }
+.floating-help-modal .help-form-cancel-btn { border-radius: 12px; font-size: .85rem; }
+.floating-help-modal .support-inbox h3 { font-size: 1rem; margin: 0 0 8px; color: #f1f5f9; }
+.floating-help-modal .support-inbox p { font-size: .85rem; color: #94a3b8; }
+.floating-help-modal .support-inbox label { font-size: .82rem; color: #cbd5e1; }
+.floating-help-modal .support-inbox .review-card { background: rgba(255,255,255,.025); border: 1px solid rgba(255,255,255,.1); border-radius: 14px; padding: 20px; }
+.floating-help-modal .support-inbox .review-card h2 { font-size: 1rem; }
+.floating-help-modal .review-actions { margin-top: 22px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.08); font-size: .8rem; color: #94a3b8; }
+.floating-help-modal .support-inbox :is(.review-actions button,button[type="submit"]) { padding: 9px 16px; border: 1px solid rgba(250,234,9,.25); background: rgba(250,234,9,.06); color: #faea09; border-radius: 10px; font-size: .8rem; }
+.floating-help-modal .support-inbox .review-actions button:disabled { color: #64748b; background: rgba(255,255,255,.025); border-color: rgba(255,255,255,.08); opacity: .65; }
+.floating-help-modal .support-inbox textarea { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12); border-radius: 12px; font: inherit; font-size: .86rem; }
+.floating-help-modal .support-select { width: 100%; }
+.floating-help-modal .support-select .rg-select__trigger { width: 100%; margin: 0; padding-left: 14px !important; text-align: left; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.12); color: #e2e8f0; }
+.floating-help-modal .support-select .rg-select__menu { z-index: 30; }
+.floating-help-modal .support-select .rg-select__option:focus { outline: 2px solid #faea09; outline-offset: -2px; background: rgba(250,234,9,.08); }
+.floating-help-modal .support-guest-note { color: #94a3b8; font-size: .85rem; line-height: 1.8; padding: 16px 18px; background: rgba(250,234,9,.035); border: 1px solid rgba(250,234,9,.18); border-radius: 12px; margin: 0 0 22px; }
+.floating-help-modal .support-guest-note button { border: 0; padding: 0; background: transparent; color: #faea09; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; font: inherit; }
+.floating-help-modal :is(button,input,textarea):focus-visible { outline: 2px solid #faea09; outline-offset: 3px; }
+@media (max-width:600px) {
+  .floating-help-modal { width: calc(100vw - 24px); height: calc(100dvh - 32px); max-height: calc(100dvh - 32px); border-radius: 18px; }
+  .floating-help-modal .help-modal-header { padding: 18px; gap: 10px; }
+  .floating-help-modal .help-modal-body { padding: 18px; }
+  .support-brand-icon { width: 44px; height: 44px; border-radius: 12px; }
+  .floating-help-modal .help-header-content { gap: 12px; }
+  .floating-help-modal .help-header-content p { font-size: .75rem; }
+  .floating-help-modal .support-panel-tabs { flex-wrap: wrap; gap: 4px; }
+  .floating-help-modal .support-panel-tabs button { padding: 10px 8px; font-size: .73rem; flex-basis: 100%; justify-content: flex-start; }
+  .floating-help-modal .help-quick-links { grid-template-columns: 1fr; }
+  .floating-help-modal .help-contact-grid { grid-template-columns: 1fr; }
+  .floating-help-modal .help-form-actions { flex-direction: column-reverse; }
+}
+@media (prefers-reduced-motion:reduce) { .floating-help-modal, .floating-help-overlay, .floating-help-modal * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* Override the generic review-page button fill for both user and admin history. */
+.floating-help-modal .support-inbox button { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.12); color: #cbd5e1; }
+.floating-help-modal .support-inbox button:hover:not(:disabled) { background: rgba(250,234,9,.08); border-color: rgba(250,234,9,.3); color: #faea09; }
+.floating-help-modal .support-inbox .support-select.rg-select--open .rg-select__trigger,
+.floating-help-modal .support-select .rg-select__trigger:focus-visible { background: rgba(250,234,9,.04); border-color: rgba(250,234,9,.55); }
+.floating-help-modal .support-inbox .review-actions button:disabled { background: rgba(255,255,255,.025); border-color: rgba(255,255,255,.08); color: #64748b; }
