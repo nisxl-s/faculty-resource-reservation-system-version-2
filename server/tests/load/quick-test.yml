@@ -1,0 +1,18 @@
+config:
+  target: "{{ $processEnvironment.TARGET_URL || 'http://localhost:5000' }}"
+  phases:
+    - duration: 10
+      arrivalRate: 5
+      name: "Quick smoke test (5 req/s for 10s)"
+  defaults:
+    headers:
+      User-Agent: "Artillery-Quick-Test/2.0"
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "Health & Resources Smoke Test"
+    flow:
+      - get:
+          url: "/api/health"
+      - get:
+          url: "/api/resources"
