@@ -1,0 +1,55 @@
+config:
+  target: "{{ $processEnvironment.TARGET_URL || 'http://localhost:5000' }}"
+  phases:
+    - duration: 60
+      arrivalRate: 10
+      name: "Warm-up phase (10 req/s)"
+    - duration: 120
+      arrivalRate: 10
+      rampTo: 50
+      name: "Ramp-up phase (10 -> 50 req/s)"
+    - duration: 60
+      arrivalRate: 50
+      name: "Sustained peak load (50 req/s)"
+  defaults:
+    headers:
+      User-Agent: "Artillery-Load-Test/2.0"
+      Content-Type: "application/json"
+
+scenarios:
+  - name: "Resource Browsing & Public Flow (70% weight)"
+    weight: 70
+    flow:
+      - get:
+          url: "/api/health"
+      - think: 1
+      - get:
+          url: "/api/resources"
+      - think: 2
+      - get:
+          url: "/api/resources/popular"
+
+  - name: "Authentication Attempt Flow (20% weight)"
+    weight: 20
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "student@university.edu"
+            password: "password123"
+
+  - name: "Reservation Query Flow (10% weight)"
+    weight: 10
+    flow:
+      - post:
+          url: "/api/auth/login"
+          json:
+            email: "student@university.edu"
+            password: "password123"
+          capture:
+            - json: "$.data.token"
+              as: "userToken"
+      - get:
+          url: "/api/reservations/my-reservations"
+          headers:
+            Authorization: "Bearer {{ userToken }}"
