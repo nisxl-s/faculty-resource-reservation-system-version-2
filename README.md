@@ -308,3 +308,8 @@ No license file is present in this checkout. Confirm the project owner's intende
 ## Current fixes and operations
 
 See [implemented fixes](docs/IMPLEMENTED_FIXES_2026-10-19.md) for registration permissions, registration IDs, review history, optional booking policy, guest tracking, transactional email, backup/restore and validation evidence.
+
+
+## Backend test credits
+
+See [the API and service checks commit](https://github.com/nisxl-s/faculty-resource-reservation-system-version-2/commit/1dfeddc9dea3d6d4636da90753ea192937bfdb08) for the original test changes. GitHub records `ChamodiEG` as the author and `nisxl-s` as the committer who integrated the change. To run the focused backend tests locally, use `npm --prefix server test` from the repository root.
