@@ -313,3 +313,6 @@ See [implemented fixes](docs/IMPLEMENTED_FIXES_2026-10-19.md) for registration p
 ## Backend test credits
 
 See [the API and service checks commit](https://github.com/nisxl-s/faculty-resource-reservation-system-version-2/commit/1dfeddc9dea3d6d4636da90753ea192937bfdb08) for the original test changes. GitHub records `ChamodiEG` as the author and `nisxl-s` as the committer who integrated the change. To run the focused backend tests locally, use `npm --prefix server test` from the repository root.
+
+
+For a focused check after changing the availability calculation, run `node --test server/tests/availability.test.js` from the repository root. It checks that invalid inputs are rejected before querying and that availability uses fresh campus-time results. After changing session handling, run `node --test server/tests/security.test.js`. Run the full backend suite before merging a change that touches both areas.
