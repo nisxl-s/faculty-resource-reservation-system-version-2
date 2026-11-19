@@ -1,5 +1,7 @@
 <div align="center">
 
+[Quick start](#quick-start) · [Working with bookings](#working-with-bookings) · [API guide](#api-guide) · [Troubleshooting](#troubleshooting)
+
 # Faculty Resource Reservation
 
 ### A shared place to find, request, and manage campus resources
